@@ -61,15 +61,15 @@
   "dependencies": {
     "@types/lodash": "^4.14.37",
     "@types/mysql": "0.0.33",
-    "@types/node": "^6.0.77",
+    "@types/node": "^16.9.2",
     "@types/yargs": "^6.3.3",
     "bluebird": "^3.5.0",
     "diff": "^3.2.0",
     "lodash": "^4.17.20",
     "mysql": "^2.13.0",
     "mz": "^2.6.0",
-    "pg-promise": "^10.9.2",
-    "typescript": "^2.7.1",
+    "pg-promise": "^10.11.0",
+    "typescript": "^4.4.3",
     "typescript-formatter": "^7.0.1",
     "yargs": "^16.0.3"
   },
