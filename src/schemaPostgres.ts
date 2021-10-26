@@ -149,7 +149,8 @@ export class PostgresDatabase implements Database {
             'SELECT table_name ' +
             'FROM information_schema.columns ' +
             'WHERE table_schema = $1 ' +
-            'GROUP BY table_name',
+            'GROUP BY table_name ' + 
+            'ORDER BY table_name',
             [schemaName],
             (schemaItem: {table_name: string}) => schemaItem.table_name
         )
