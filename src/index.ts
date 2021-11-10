@@ -124,30 +124,74 @@ export async function typescriptOfSchema (
 
     const validatorStrings = [
         `
-function validate(type: string, nullable: boolean) {
-    const validators = {
-        'boolean': (v: any) => typeof v == 'boolean',
-        'string': (v: any) => typeof v == 'string',
-        'number': (v: any) => typeof v == 'number',
-        'bigint': (v: any) => typeof v == 'bigint',
-        'Date': (v: any) => Object.prototype.toString.call(v) == '[object Date]' && !isNaN(v),
-        'Object': (v: any) => typeof v == 'object' && !!v,
+interface DataTypes {
+    string: string
+    boolean: boolean
+    Date: Date
+    bigint: bigint
+    number: number
+    Object: Object
+}
+
+type DataType = DataTypes[keyof DataTypes]
+
+export interface ColumnSpec<T extends DataType> {
+    validate: (v: any) => boolean
+    parse: (v: string) => T
+    nullable: boolean
+    type: keyof DataTypes
+}
+
+function validate<K extends keyof DataTypes>(type: K, nullable: boolean): ColumnSpec<DataTypes[K]> {
+    const validators: {
+        [t in keyof DataTypes]: (v: any) => boolean
+    } = {
+        string: (v: any) => typeof v == 'string',
+        number: (v: any) => typeof v == 'number',
+        bigint: (v: any) => typeof v == 'bigint',
+        Date: (v: any) => Object.prototype.toString.call(v) == '[object Date]' && !isNaN(v),
+        Object: (v: any) => typeof v == 'object' && !!v,
+        boolean: (v: any) => typeof v == 'boolean',
     }
+
+    const parsers: {
+        [t in keyof DataTypes]: (v: string) => DataTypes[t]
+    } = {
+        string: (v: string) => v,
+        number: (v: string) => parseFloat(v),
+        bigint: (v: string) => BigInt(v),
+        Date: (v: string) => new Date(v),
+        Object: (v: string) => JSON.parse(v),
+        boolean: (v: string) => {
+            if (v == 'true') {
+                return true
+            }
+            if (v == 'false') {
+                return false
+            }
+            throw new Error('Could not parse ' + v + ' as boolean')
+        },
+    }
+
     if (!(type in validators)) {
-        throw new Error("Unsupported type: " + type)
+        throw new Error('Unsupported type: ' + type)
     }
-    const validateFn = (value: any) => {
+
+    const validateFn = validators[type]
+
+    const validate = (value: any) => {
         if (value === null) {
             return nullable
         }
-        const validate = validators[type as keyof typeof validators]
-        if (!validate) {
+
+        if (!validateFn) {
             return false
         }
-        return validate(value)
+        return validateFn(value)
     }
 
-    return { validate: validateFn, nullable }
+    const parse = parsers[type]
+    return { validate, nullable, type, parse: parse as ColumnSpec<DataTypes[K]>['parse'] }
 }
 export const Validator = {`
     ]
