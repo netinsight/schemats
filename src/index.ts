@@ -3,7 +3,12 @@
  * Created by xiamx on 2016-08-10.
  */
 
-import { generateEnumType, generateTableTypes, generateTableInterface } from './typescript'
+import {
+    generateEnumType,
+    generateTableTypes,
+    generateTableInterface,
+    TableValidator
+} from './typescript'
 import { getDatabase, Database } from './schema'
 import Options, { OptionValues } from './options'
 import { processString, Options as ITFOptions } from 'typescript-formatter'
@@ -21,8 +26,18 @@ function getTime () {
     return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`
 }
 
-function buildHeader (db: Database, tables: string[], schema: string|null, options: OptionValues): string {
-    let commands = ['schemats', 'generate', '-c', db.connectionString.replace(/:\/\/.*@/,'://username:password@')]
+function buildHeader (
+    db: Database,
+    tables: string[],
+    schema: string | null,
+    options: OptionValues
+): string {
+    let commands = [
+        'schemats',
+        'generate',
+        '-c',
+        db.connectionString.replace(/:\/\/.*@/, '://username:password@')
+    ]
     if (options.camelCase) commands.push('-C')
     if (tables.length > 0) {
         tables.forEach((t: string) => {
@@ -45,25 +60,43 @@ function buildHeader (db: Database, tables: string[], schema: string|null, optio
     `
 }
 
-export async function typescriptOfTable (db: Database|string, 
-                                         table: string,
-                                         schema: string,
-                                         options = new Options()) {
+export async function typescriptOfTable (
+    db: Database | string,
+    table: string,
+    schema: string,
+    options = new Options()
+): Promise<{ interfaces: string; validator: TableValidator }> {
     if (typeof db === 'string') {
         db = getDatabase(db)
     }
 
     let interfaces = ''
     let tableTypes = await db.getTableTypes(table, schema, options)
-    interfaces += generateTableTypes(table, tableTypes, options)
+    const { fields, validator } = generateTableTypes(
+        table,
+        tableTypes,
+        options
+    )
+    interfaces += fields
     interfaces += generateTableInterface(table, tableTypes, options)
-    return interfaces
+    return { interfaces, validator }
 }
 
-export async function typescriptOfSchema (db: Database|string,
-                                          tables: string[] = [],
-                                          schema: string|null = null,
-                                          options: OptionValues = {}): Promise<string> {
+export function validatorToString (validator: TableValidator) {
+    const lines: string[] = [`    ${validator.tableName}: {`]
+    for (const field of validator.fieldValidators) {
+        lines.push(`        ${field.fieldName}: ${field.validator},`)
+    }
+    lines.push('},')
+    return lines.join('\n')
+}
+
+export async function typescriptOfSchema (
+    db: Database | string,
+    tables: string[] = [],
+    schema: string | null = null,
+    options: OptionValues = {}
+): Promise<string> {
     if (typeof db === 'string') {
         db = getDatabase(db)
     }
@@ -78,10 +111,50 @@ export async function typescriptOfSchema (db: Database|string,
 
     const optionsObject = new Options(options)
 
-    const enumTypes = generateEnumType(await db.getEnumTypes(schema), optionsObject)
-    const interfacePromises = tables.map((table) => typescriptOfTable(db, table, schema as string, optionsObject))
-    const interfaces = await Promise.all(interfacePromises)
-        .then(tsOfTable => tsOfTable.join(''))
+    const enumTypes = generateEnumType(
+        await db.getEnumTypes(schema),
+        optionsObject
+    )
+    const tableResultPromises = tables.map((table) =>
+        typescriptOfTable(db, table, schema as string, optionsObject)
+    )
+    const tableResults = await Promise.all(tableResultPromises)
+    const interfaces = tableResults.map((r) => r.interfaces).join('')
+    const validators = tableResults.map((r) => r.validator)
+
+    const validatorStrings = [
+        `
+function validate(type: string, nullable: boolean) {
+    const validators = {
+        'boolean': (v: any) => typeof v == 'boolean',
+        'string': (v: any) => typeof v == 'string',
+        'number': (v: any) => typeof v == 'number',
+        'bigint': (v: any) => typeof v == 'bigint',
+        'Date': (v: any) => Object.prototype.toString.call(v) == '[object Date]' && !isNaN(v),
+        'Object': (v: any) => typeof v == 'object' && !!v,
+    }
+    if (!(type in validators)) {
+        throw new Error("Unsupported type: " + type)
+    }
+    const validateFn = (value: any) => {
+        if (value === null) {
+            return nullable
+        }
+        const validate = validators[type as keyof typeof validators]
+        if (!validate) {
+            return false
+        }
+        return validate(value)
+    }
+
+    return { validate: validateFn, nullable }
+}
+export const Validator = {`
+    ]
+    for (const validator of validators) {
+        validatorStrings.push(validatorToString(validator))
+    }
+    validatorStrings.push('}')
 
     let output = '/* tslint:disable */\n\n'
     if (optionsObject.options.writeHeader) {
@@ -89,6 +162,7 @@ export async function typescriptOfSchema (db: Database|string,
     }
     output += enumTypes
     output += interfaces
+    output += validatorStrings.join('\n')
 
     const formatterOption: ITFOptions = {
         replace: false,
@@ -104,9 +178,13 @@ export async function typescriptOfSchema (db: Database|string,
         tsfmtFile: null
     }
 
-    const processedResult = await processString('schema.ts', output, formatterOption)
+    const processedResult = await processString(
+        'schema.ts',
+        output,
+        formatterOption
+    )
     return processedResult.dest
 }
 
-export {Database, getDatabase} from './schema'
-export {Options, OptionValues}
+export { Database, getDatabase } from './schema'
+export { Options, OptionValues }
