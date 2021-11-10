@@ -136,7 +136,7 @@ function validate(type: string, nullable: boolean) {
     if (!(type in validators)) {
         throw new Error("Unsupported type: " + type)
     }
-    return function (value: any) {
+    const validateFn = (value: any) => {
         if (value === null) {
             return nullable
         }
@@ -146,6 +146,8 @@ function validate(type: string, nullable: boolean) {
         }
         return validate(value)
     }
+
+    return { validate: validateFn, nullable }
 }
 export const Validator = {`
     ]
