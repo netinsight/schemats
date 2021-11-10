@@ -130,7 +130,7 @@ function validate(type: string, nullable: boolean) {
         'string': (v: any) => typeof v == 'string',
         'number': (v: any) => typeof v == 'number',
         'bigint': (v: any) => typeof v == 'bigint',
-        'Date': (v: any) => Object.prototype.toString.call(v) == '[object Date] && !isNaN(v)',
+        'Date': (v: any) => Object.prototype.toString.call(v) == '[object Date]' && !isNaN(v),
         'Object': (v: any) => typeof v == 'object' && !!v,
     }
     if (!(type in validators)) {
