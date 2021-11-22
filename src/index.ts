@@ -131,6 +131,7 @@ interface DataTypes {
     bigint: bigint
     number: number
     Object: Object
+    "Array<string>": string[]
 }
 
 type DataType = DataTypes[keyof DataTypes]
@@ -152,6 +153,7 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
         Date: (v: any) => Object.prototype.toString.call(v) == '[object Date]' && !isNaN(v),
         Object: (v: any) => typeof v == 'object' && !!v,
         boolean: (v: any) => typeof v == 'boolean',
+        "Array<string>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'string')
     }
 
     const parsers: {
@@ -171,6 +173,13 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
             }
             throw new Error('Could not parse ' + v + ' as boolean')
         },
+        "Array<string>": (v: string) => {
+            const json = JSON.parse(v)
+            if (!Array.isArray(json) || json.some(item => typeof item != 'string')) {
+                throw new Error('String not parsable as string array')
+            }
+            return json as string[]
+        }
     }
 
     if (!(type in validators)) {
