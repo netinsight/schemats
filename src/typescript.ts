@@ -106,9 +106,15 @@ export function generateTableTypes (
 }
 function validatorFromColumnDefinition (definition: ColumnDefinition): string {
     if (
-        !['number', 'string', 'boolean', 'Object', 'Date', 'bigint'].includes(
-            definition.tsType!
-        )
+        ![
+            'number',
+            'string',
+            'boolean',
+            'Object',
+            'Date',
+            'bigint',
+            'Array<string>'
+        ].includes(definition.tsType!)
     ) {
         throw new Error(`Unsupported ts type: ${definition.tsType}`)
     }
