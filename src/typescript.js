@@ -76,7 +76,8 @@ function validatorFromColumnDefinition(definition) {
         'Object',
         'Date',
         'bigint',
-        'Array<string>'
+        'Array<string>',
+        'Array<bigint>'
     ].includes(definition.tsType)) {
         throw new Error("Unsupported ts type: " + definition.tsType);
     }
