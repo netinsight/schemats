@@ -110,7 +110,7 @@ describe('MysqlDatabase', () => {
             ]))
             try {
                 await db.getEnumTypes('testschema')
-            } catch (e) {
+            } catch (e: any) {
                 assert.equal(e.message, 'Multiple enums with the same name and contradicting types were found: column1: ["enum1"] and ["enum2"]')
             }
         })

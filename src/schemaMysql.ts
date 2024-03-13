@@ -110,8 +110,8 @@ export class MysqlDatabase implements Database {
             'FROM information_schema.columns ' +
             `WHERE data_type IN ('enum', 'set') ${enumSchemaWhereClause}`,
             params
-        )
-        rawEnumRecords.forEach((enumItem: { column_name: string, column_type: string, data_type: string }) => {
+        ) as { column_name: string, column_type: string, data_type: string }[]
+        rawEnumRecords.forEach((enumItem) => {
             const enumName = MysqlDatabase.getEnumNameFromColumn(enumItem.data_type, enumItem.column_name)
             const enumValues = MysqlDatabase.parseMysqlEnumeration(enumItem.column_type)
             if (enums[enumName] && !isEqual(enums[enumName], enumValues)) {
@@ -132,8 +132,8 @@ export class MysqlDatabase implements Database {
             'FROM information_schema.columns ' +
             'WHERE table_name = ? and table_schema = ?',
             [tableName, tableSchema]
-        )
-        tableColumns.map((schemaItem: { column_name: string, data_type: string, is_nullable: string }) => {
+        ) as { column_name: string, data_type: string, is_nullable: string }[]
+        tableColumns.map((schemaItem) => {
             const columnName = schemaItem.column_name
             const dataType = schemaItem.data_type
             tableDefinition[columnName] = {
@@ -157,8 +157,8 @@ export class MysqlDatabase implements Database {
             'WHERE table_schema = ? ' +
             'GROUP BY table_name',
             [schemaName]
-        )
-        return schemaTables.map((schemaItem: { table_name: string }) => schemaItem.table_name)
+        ) as { table_name: string }[]
+        return schemaTables.map((schemaItem) => schemaItem.table_name)
     }
 
     public queryAsync (queryString: string, escapedValues?: Array<string>): Promise<Object[]> {

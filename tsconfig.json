@@ -1,12 +1,9 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",
-        "lib": ["es2015"],
-        "noImplicitAny": true,
+        "target": "ES2021",
         "declaration": true,
-        "strictNullChecks": true,
-        "newLine": "LF",
+        "strict": true,
         "sourceMap": true
     },
     "exclude": [

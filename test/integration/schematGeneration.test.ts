@@ -54,7 +54,7 @@ describe('schemat generation integration testing', () => {
             const config: any = './fixture/mysql/conflict.json'
             try {
                 await writeTsFile(inputSQLFile, config, outputFile, db)
-            } catch (e) {
+            } catch (e: any) {
                 assert.equal(e.message, 'Multiple enums with the same name and contradicting types were found: location_type: ["city","province","country"] and ["city","state","country"]')
             }
         })
