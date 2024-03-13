@@ -1,13 +1,11 @@
 # Schemats
 
-[![npm](https://img.shields.io/npm/v/schemats.svg)](https://www.npmjs.com/package/schemats)
-[![GitHub tag](https://img.shields.io/github/tag/SweetIQ/schemats.svg)](https://github.com/SweetIQ/schemats)
-[![TravisCI Build Status](https://travis-ci.org/SweetIQ/schemats.svg?branch=master)](https://travis-ci.org/SweetIQ/schemats)
-[![Coverage Status](https://coveralls.io/repos/github/SweetIQ/schemats/badge.svg?branch=coverage)](https://coveralls.io/github/SweetIQ/schemats?branch=coverage)
+[![GitHub tag](https://img.shields.io/github/tag/netinsight/schemats.svg)](https://github.com/netinsight/schemats)
+[![test](https://github.com/netinsight/schemats/actions/workflows/test.yml/badge.svg)](https://github.com/netinsight/schemats/actions/workflows/test.yml)
 
 Using Schemats, you can generate TypeScript interface definitions from (Postgres, MySQL) SQL database schema automatically.
 
-Start with a database schema: 
+Start with a database schema:
 
 <table>
 <tr><th colspan="2">Users</th></tr>
@@ -53,12 +51,12 @@ schemats generate -c mysql://mysql@localhost/osm -t users -o osm.ts
 ```
 
 
-The above commands will generate typescript interfaces for [`osm`](test/osm_schema.sql) database 
+The above commands will generate typescript interfaces for [`osm`](test/osm_schema.sql) database
 with table [`users`](test/osm_schema.sql#L18). The resulting file is stored as [`osm.ts`](test/example/osm.ts).
 
 ### Generating the type definition for all the tables in a postgres schema
 
-To generate all type definitions for all the tables within the schema 'public': 
+To generate all type definitions for all the tables within the schema 'public':
 
 *Note: MySQL does not have a default public schema, but should it have a schema named public, this will still work.*
 
@@ -74,7 +72,7 @@ schemats generate -c postgres://postgres@localhost/osm -o osm.ts
 schemats generate -c mysql://mysql@localhost/osm -o osm.ts
 ```
 
-### Using schemats.json config file 
+### Using schemats.json config file
 
 Schemats supports reading configuration from a json config file (defaults to `schemats.json`). Instead of passing configuration via commandline parameter like done above, it is also possible to supply the configuration through a config file. The config file supports the same parameters as the commandline arguments.
 
@@ -87,7 +85,7 @@ For example, if a `schemats.json` exists in the current working directory with t
 }
 ```
 
-Running `schemats generate` here is equivalent to running `schemats generate -c postgres://postgres@localhost/osm -t users -o osm.ts`. 
+Running `schemats generate` here is equivalent to running `schemats generate -c postgres://postgres@localhost/osm -t users -o osm.ts`.
 
 ### Writing code with typed schema
 
@@ -101,7 +99,7 @@ import * as osm from './osm'
 
 
 // Now query with pg-promise and have a completely typed return value
-  
+
 let usersCreatedAfter2013: Array<osm.users>
    = await db.query("SELECT * FROM users WHERE creation_time >= '2013-01-01'");
 
@@ -129,7 +127,7 @@ Schemats exposes two high-level functions for generating typescript definition f
 ### Upgrading to v1.0
 
 #### Deprecation of Namespace
-Version 1.0 deprecates generating schema typescript files with namespace. 
+Version 1.0 deprecates generating schema typescript files with namespace.
 
 Instead of generating schema typescript files with
 
@@ -137,7 +135,7 @@ Instead of generating schema typescript files with
 schemats generate -c postgres://postgres@localhost/db -n yournamespace -o db.ts
 ```
 
-and import them with 
+and import them with
 ```typescript
 import {yournamespace} from './db'
 ```
@@ -146,7 +144,7 @@ It is now encouraged to generate without namespace
 ```bash
 schemats generate -c postgres://postgres@localhost/db -o db.ts
 ```
-and import them with 
+and import them with
 ```typescript
 import * as yournamespace from './db'
 // or
@@ -156,7 +154,7 @@ import {table_a, table_b} from './db'
 As [TypeScript's documentation](https://www.typescriptlang.org/docs/handbook/namespaces-and-modules.html) describes,
 having a top level namespace is needless. This was discussed in [#25](https://github.com/SweetIQ/schemats/issues/25).
 
-Generating schema typescript files with namespace still works in v1.0, but it is discouraged and subjected to 
+Generating schema typescript files with namespace still works in v1.0, but it is discouraged and subjected to
 removal in the future.
 
 #### Support Strict Null-Checking
