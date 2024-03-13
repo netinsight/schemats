@@ -43,9 +43,9 @@ describe('MysqlDatabase', () => {
                     cb('ERROR')
                 }
             })
-            const testDb: any = new MysqlDatabase('mysql://user:password@localhost/test')
+            const testDb = new MysqlDatabase('mysql://user:password@localhost/test')
             try {
-                testDb.query('SELECT * FROM test_table')
+                await testDb.query('SELECT * FROM test_table')
             } catch (e) {
                 assert.equal(e, 'ERROR')
             }
