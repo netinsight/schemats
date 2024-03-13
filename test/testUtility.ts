@@ -1,4 +1,4 @@
-import * as fs from 'mz/fs'
+import * as fs from 'node:fs/promises'
 import { typescriptOfSchema, Database } from '../src/index'
 import * as ts from 'typescript';
 
@@ -17,7 +17,6 @@ export function compile(fileNames: string[], options: ts.CompilerOptions): boole
     return exitCode === 0
 }
 export async function compare(goldStandardFile: string, outputFile: string): Promise<boolean> {
-
     let gold = await fs.readFile(goldStandardFile, {encoding: 'utf8'})
     let actual = await fs.readFile(outputFile, {encoding: 'utf8'})
 
