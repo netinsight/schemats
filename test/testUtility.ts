@@ -1,6 +1,5 @@
 import * as fs from 'mz/fs'
 import { typescriptOfSchema, Database } from '../src/index'
-import Options from '../src/options'
 import * as ts from 'typescript';
 
 const diff = require('diff')

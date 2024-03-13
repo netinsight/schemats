@@ -43,9 +43,9 @@ describe('MysqlDatabase', () => {
                     cb('ERROR')
                 }
             })
-            const testDb: any = new MysqlDatabase('mysql://user:password@localhost/test')
+            const testDb = new MysqlDatabase('mysql://user:password@localhost/test')
             try {
-                testDb.query('SELECT * FROM test_table')
+                await testDb.query('SELECT * FROM test_table')
             } catch (e) {
                 assert.equal(e, 'ERROR')
             }
@@ -110,7 +110,7 @@ describe('MysqlDatabase', () => {
             ]))
             try {
                 await db.getEnumTypes('testschema')
-            } catch (e) {
+            } catch (e: any) {
                 assert.equal(e.message, 'Multiple enums with the same name and contradicting types were found: column1: ["enum1"] and ["enum2"]')
             }
         })
