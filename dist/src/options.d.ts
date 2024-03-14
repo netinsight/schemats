@@ -1,4 +1,4 @@
-export declare type OptionValues = {
+export type OptionValues = {
     camelCase?: boolean;
     writeHeader?: boolean;
 };
