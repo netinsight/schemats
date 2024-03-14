@@ -6,8 +6,7 @@
 
 import * as yargs from 'yargs'
 import * as fs from 'fs'
-import { typescriptOfSchema, getDatabase } from '../src/index'
-import Options from '../src/options'
+import { typescriptOfSchema } from '../src/index'
 
 interface SchematsConfig {
     conn: string,
@@ -50,7 +49,6 @@ let argv: SchematsConfig = yargs
     .argv;
 
 (async () => {
-
     try {
         if (!Array.isArray(argv.table)) {
             if (!argv.table) {
