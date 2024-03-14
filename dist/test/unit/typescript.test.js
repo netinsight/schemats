@@ -1,29 +1,29 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var assert = require("assert");
-var Typescript = require("../../src/typescript");
-var options_1 = require("../../src/options");
-var options = new options_1.default({});
-describe('Typescript', function () {
-    describe('generateTableInterface', function () {
-        it('empty table definition object', function () {
-            var tableInterface = Typescript.generateTableInterface('tableName', {}, options);
+const assert = require("assert");
+const Typescript = require("../../src/typescript");
+const options_1 = require("../../src/options");
+const options = new options_1.default({});
+describe('Typescript', () => {
+    describe('generateTableInterface', () => {
+        it('empty table definition object', () => {
+            const tableInterface = Typescript.generateTableInterface('tableName', {}, options);
             assert.equal(tableInterface, '\n' +
                 '        export interface tableName {\n' +
                 '        \n' +
                 '        }\n' +
                 '    ');
         });
-        it('table name is reserved', function () {
-            var tableInterface = Typescript.generateTableInterface('package', {}, options);
+        it('table name is reserved', () => {
+            const tableInterface = Typescript.generateTableInterface('package', {}, options);
             assert.equal(tableInterface, '\n' +
                 '        export interface package_ {\n' +
                 '        \n' +
                 '        }\n' +
                 '    ');
         });
-        it('table with columns', function () {
-            var tableInterface = Typescript.generateTableInterface('tableName', {
+        it('table with columns', () => {
+            const tableInterface = Typescript.generateTableInterface('tableName', {
                 col1: { udtName: 'name1', nullable: false },
                 col2: { udtName: 'name2', nullable: false }
             }, options);
@@ -35,8 +35,8 @@ describe('Typescript', function () {
                 '        }\n' +
                 '    ');
         });
-        it('table with reserved columns', function () {
-            var tableInterface = Typescript.generateTableInterface('tableName', {
+        it('table with reserved columns', () => {
+            const tableInterface = Typescript.generateTableInterface('tableName', {
                 string: { udtName: 'name1', nullable: false },
                 number: { udtName: 'name2', nullable: false },
                 package: { udtName: 'name3', nullable: false }
@@ -51,37 +51,37 @@ describe('Typescript', function () {
                 '    ');
         });
     });
-    describe('generateEnumType', function () {
-        it('empty object', function () {
-            var enumType = Typescript.generateEnumType({}, options);
+    describe('generateEnumType', () => {
+        it('empty object', () => {
+            const enumType = Typescript.generateEnumType({}, options);
             assert.equal(enumType, '');
         });
-        it('with enumerations', function () {
-            var enumType = Typescript.generateEnumType({
+        it('with enumerations', () => {
+            const enumType = Typescript.generateEnumType({
                 enum1: ['val1', 'val2', 'val3', 'val4'],
                 enum2: ['val5', 'val6', 'val7', 'val8']
             }, options);
-            assert.equal(enumType, 'export type enum1 = \'val1\' | \'val2\' | \'val3\' | \'val4\';\n' +
-                'export type enum2 = \'val5\' | \'val6\' | \'val7\' | \'val8\';\n');
+            assert.equal(enumType, "export type enum1 = 'val1' | 'val2' | 'val3' | 'val4';\n" +
+                "export type enum2 = 'val5' | 'val6' | 'val7' | 'val8';\n");
         });
     });
-    describe('generateEnumType', function () {
-        it('empty object', function () {
-            var enumType = Typescript.generateEnumType({}, options);
+    describe('generateEnumType', () => {
+        it('empty object', () => {
+            const enumType = Typescript.generateEnumType({}, options);
             assert.equal(enumType, '');
         });
-        it('with enumerations', function () {
-            var enumType = Typescript.generateEnumType({
+        it('with enumerations', () => {
+            const enumType = Typescript.generateEnumType({
                 enum1: ['val1', 'val2', 'val3', 'val4'],
                 enum2: ['val5', 'val6', 'val7', 'val8']
             }, options);
-            assert.equal(enumType, 'export type enum1 = \'val1\' | \'val2\' | \'val3\' | \'val4\';\n' +
-                'export type enum2 = \'val5\' | \'val6\' | \'val7\' | \'val8\';\n');
+            assert.equal(enumType, "export type enum1 = 'val1' | 'val2' | 'val3' | 'val4';\n" +
+                "export type enum2 = 'val5' | 'val6' | 'val7' | 'val8';\n");
         });
     });
-    describe('generateTableTypes', function () {
-        it('empty table definition object', function () {
-            var tableTypes = Typescript.generateTableTypes('tableName', {}, options);
+    describe('generateTableTypes', () => {
+        it('empty table definition object', () => {
+            const { fields: tableTypes } = Typescript.generateTableTypes('tableName', {}, options);
             assert.equal(tableTypes, '\n' +
                 '        export namespace tableNameFields {' +
                 '\n        ' +
@@ -89,10 +89,18 @@ describe('Typescript', function () {
                 '}' +
                 '\n    ');
         });
-        it('with table definitions', function () {
-            var tableTypes = Typescript.generateTableTypes('tableName', {
-                col1: { udtName: 'name1', nullable: false, tsType: 'string' },
-                col2: { udtName: 'name2', nullable: false, tsType: 'number' }
+        it('with table definitions', () => {
+            const { fields: tableTypes } = Typescript.generateTableTypes('tableName', {
+                col1: {
+                    udtName: 'name1',
+                    nullable: false,
+                    tsType: 'string'
+                },
+                col2: {
+                    udtName: 'name2',
+                    nullable: false,
+                    tsType: 'number'
+                }
             }, options);
             assert.equal(tableTypes, '\n' +
                 '        export namespace tableNameFields {' +
@@ -102,10 +110,18 @@ describe('Typescript', function () {
                 '\n        }' +
                 '\n    ');
         });
-        it('with nullable column definitions', function () {
-            var tableTypes = Typescript.generateTableTypes('tableName', {
-                col1: { udtName: 'name1', nullable: true, tsType: 'string' },
-                col2: { udtName: 'name2', nullable: true, tsType: 'number' }
+        it('with nullable column definitions', () => {
+            const { fields: tableTypes } = Typescript.generateTableTypes('tableName', {
+                col1: {
+                    udtName: 'name1',
+                    nullable: true,
+                    tsType: 'string'
+                },
+                col2: {
+                    udtName: 'name2',
+                    nullable: true,
+                    tsType: 'number'
+                }
             }, options);
             assert.equal(tableTypes, '\n' +
                 '        export namespace tableNameFields {' +

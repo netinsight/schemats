@@ -1,53 +1,44 @@
+"use strict";
 /**
  * Schemats takes sql database schema and creates corresponding typescript definitions
  * Created by xiamx on 2016-08-10.
  */
-
-import {
-    generateEnumType,
-    generateTableTypes,
-    generateTableInterface,
-    TableValidator
-} from './typescript'
-import { getDatabase, Database } from './schema'
-import Options, { OptionValues } from './options'
-import { processString, Options as ITFOptions } from 'typescript-formatter'
-import { version as pkgVersion } from '../package.json'
-
-function getTime () {
-    let padTime = (value: number) => `0${value}`.slice(-2)
-    let time = new Date()
-    const yyyy = time.getFullYear()
-    const MM = padTime(time.getMonth() + 1)
-    const dd = padTime(time.getDate())
-    const hh = padTime(time.getHours())
-    const mm = padTime(time.getMinutes())
-    const ss = padTime(time.getSeconds())
-    return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Options = exports.getDatabase = exports.typescriptOfSchema = exports.validatorToString = exports.typescriptOfTable = void 0;
+const typescript_1 = require("./typescript");
+const schema_1 = require("./schema");
+const options_1 = require("./options");
+exports.Options = options_1.default;
+const typescript_formatter_1 = require("typescript-formatter");
+const pkgVersion = require('../package.json').version;
+function getTime() {
+    let padTime = (value) => `0${value}`.slice(-2);
+    let time = new Date();
+    const yyyy = time.getFullYear();
+    const MM = padTime(time.getMonth() + 1);
+    const dd = padTime(time.getDate());
+    const hh = padTime(time.getHours());
+    const mm = padTime(time.getMinutes());
+    const ss = padTime(time.getSeconds());
+    return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
 }
-
-function buildHeader (
-    db: Database,
-    tables: string[],
-    schema: string | null,
-    options: OptionValues
-): string {
+function buildHeader(db, tables, schema, options) {
     let commands = [
         'schemats',
         'generate',
         '-c',
         db.connectionString.replace(/:\/\/.*@/, '://username:password@')
-    ]
-    if (options.camelCase) commands.push('-C')
+    ];
+    if (options.camelCase)
+        commands.push('-C');
     if (tables.length > 0) {
-        tables.forEach((t: string) => {
-            commands.push('-t', t)
-        })
+        tables.forEach((t) => {
+            commands.push('-t', t);
+        });
     }
     if (schema) {
-        commands.push('-s', schema)
+        commands.push('-s', schema);
     }
-
     return `
         /**
          * AUTO-GENERATED FILE @ ${getTime()} - DO NOT EDIT!
@@ -57,71 +48,45 @@ function buildHeader (
          *
          */
 
-    `
+    `;
 }
-
-export async function typescriptOfTable (
-    db: Database | string,
-    table: string,
-    schema: string,
-    options = new Options()
-): Promise<{ interfaces: string; validator: TableValidator }> {
+async function typescriptOfTable(db, table, schema, options = new options_1.default()) {
     if (typeof db === 'string') {
-        db = getDatabase(db)
+        db = (0, schema_1.getDatabase)(db);
     }
-
-    let interfaces = ''
-    let tableTypes = await db.getTableTypes(table, schema, options)
-    const { fields, validator } = generateTableTypes(
-        table,
-        tableTypes,
-        options
-    )
-    interfaces += fields
-    interfaces += generateTableInterface(table, tableTypes, options)
-    return { interfaces, validator }
+    let interfaces = '';
+    let tableTypes = await db.getTableTypes(table, schema, options);
+    const { fields, validator } = (0, typescript_1.generateTableTypes)(table, tableTypes, options);
+    interfaces += fields;
+    interfaces += (0, typescript_1.generateTableInterface)(table, tableTypes, options);
+    return { interfaces, validator };
 }
-
-export function validatorToString (validator: TableValidator) {
-    const lines: string[] = [`    ${validator.tableName}: {`]
+exports.typescriptOfTable = typescriptOfTable;
+function validatorToString(validator) {
+    const lines = [`    ${validator.tableName}: {`];
     for (const field of validator.fieldValidators) {
-        lines.push(`        ${field.fieldName}: ${field.validator},`)
+        lines.push(`        ${field.fieldName}: ${field.validator},`);
     }
-    lines.push('},')
-    return lines.join('\n')
+    lines.push('},');
+    return lines.join('\n');
 }
-
-export async function typescriptOfSchema (
-    db: Database | string,
-    tables: string[] = [],
-    schema: string | null = null,
-    options: OptionValues = {}
-): Promise<string> {
+exports.validatorToString = validatorToString;
+async function typescriptOfSchema(db, tables = [], schema = null, options = {}) {
     if (typeof db === 'string') {
-        db = getDatabase(db)
+        db = (0, schema_1.getDatabase)(db);
     }
-
     if (!schema) {
-        schema = db.getDefaultSchema()
+        schema = db.getDefaultSchema();
     }
-
     if (tables.length === 0) {
-        tables = await db.getSchemaTables(schema)
+        tables = await db.getSchemaTables(schema);
     }
-
-    const optionsObject = new Options(options)
-
-    const enumTypes = generateEnumType(
-        await db.getEnumTypes(schema),
-        optionsObject
-    )
-    const tableResultPromises = tables.map((table) =>
-        typescriptOfTable(db, table, schema as string, optionsObject)
-    )
-    const tableResults = await Promise.all(tableResultPromises)
-    const interfaces = tableResults.map((r) => r.interfaces).join('')
-    const validators = tableResults.map((r) => r.validator)
-
+    const optionsObject = new options_1.default(options);
+    const enumTypes = (0, typescript_1.generateEnumType)(await db.getEnumTypes(schema), optionsObject);
+    const tableResultPromises = tables.map((table) => typescriptOfTable(db, table, schema, optionsObject));
+    const tableResults = await Promise.all(tableResultPromises);
+    const interfaces = tableResults.map((r) => r.interfaces).join('');
+    const validators = tableResults.map((r) => r.validator);
     const validatorStrings = [
         `
 interface DataTypes {
@@ -212,21 +177,19 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
     return { validate, nullable, type, parse: parse as ColumnSpec<DataTypes[K]>['parse'] }
 }
 export const Validator = {`
-    ]
+    ];
     for (const validator of validators) {
-        validatorStrings.push(validatorToString(validator))
+        validatorStrings.push(validatorToString(validator));
     }
-    validatorStrings.push('}')
-
-    let output = '/* tslint:disable */\n\n'
+    validatorStrings.push('}');
+    let output = '/* tslint:disable */\n\n';
     if (optionsObject.options.writeHeader) {
-        output += buildHeader(db, tables, schema, options)
+        output += buildHeader(db, tables, schema, options);
     }
-    output += enumTypes
-    output += interfaces
-    output += validatorStrings.join('\n')
-
-    const formatterOption: ITFOptions = {
+    output += enumTypes;
+    output += interfaces;
+    output += validatorStrings.join('\n');
+    const formatterOption = {
         replace: false,
         verify: false,
         tsconfig: true,
@@ -238,15 +201,11 @@ export const Validator = {`
         tslintFile: null,
         vscodeFile: null,
         tsfmtFile: null
-    }
-
-    const processedResult = await processString(
-        'schema.ts',
-        output,
-        formatterOption
-    )
-    return processedResult.dest
+    };
+    const processedResult = await (0, typescript_formatter_1.processString)('schema.ts', output, formatterOption);
+    return processedResult.dest;
 }
-
-export { Database, getDatabase } from './schema'
-export { Options, OptionValues }
+exports.typescriptOfSchema = typescriptOfSchema;
+var schema_2 = require("./schema");
+Object.defineProperty(exports, "getDatabase", { enumerable: true, get: function () { return schema_2.getDatabase; } });
+//# sourceMappingURL=index.js.map

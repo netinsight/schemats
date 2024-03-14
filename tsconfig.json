@@ -2,10 +2,14 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "ES2021",
+        "rootDir": "./",
+        "outDir": "./dist",
         "declaration": true,
         "strict": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "resolveJsonModule": true
     },
+    "include": ["./src/**/*.ts", "./bin/**/*.ts", "./test/**/*.ts"],
     "exclude": [
         "node_modules",
         "dts",
