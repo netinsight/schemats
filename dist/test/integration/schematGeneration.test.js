@@ -1,6 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const assert = require("power-assert");
+const power_assert_1 = __importDefault(require("power-assert"));
 const index_1 = require("../../src/index");
 const testUtility_1 = require("../testUtility");
 describe('schemat generation integration testing', () => {
@@ -19,7 +22,7 @@ describe('schemat generation integration testing', () => {
             const expectedFile = './test/expected/postgres/osm.ts';
             const config = './fixture/postgres/osm.json';
             await (0, testUtility_1.writeTsFile)(inputSQLFile, config, outputFile, db);
-            return assert(await (0, testUtility_1.compare)(expectedFile, outputFile));
+            return (0, power_assert_1.default)(await (0, testUtility_1.compare)(expectedFile, outputFile));
         });
         it('Camelcase generation', async () => {
             const inputSQLFile = 'test/fixture/postgres/osm.sql';
@@ -27,7 +30,7 @@ describe('schemat generation integration testing', () => {
             const expectedFile = './test/expected/postgres/osm-camelcase.ts';
             const config = './fixture/postgres/osm-camelcase.json';
             await (0, testUtility_1.writeTsFile)(inputSQLFile, config, outputFile, db);
-            return assert(await (0, testUtility_1.compare)(expectedFile, outputFile));
+            return (0, power_assert_1.default)(await (0, testUtility_1.compare)(expectedFile, outputFile));
         });
     });
     describe('mysql', () => {
@@ -45,7 +48,7 @@ describe('schemat generation integration testing', () => {
             const expectedFile = './test/expected/mysql/osm.ts';
             const config = './fixture/mysql/osm.json';
             await (0, testUtility_1.writeTsFile)(inputSQLFile, config, outputFile, db);
-            return assert(await (0, testUtility_1.compare)(expectedFile, outputFile));
+            return (0, power_assert_1.default)(await (0, testUtility_1.compare)(expectedFile, outputFile));
         });
         it('Enum conflict in columns', async () => {
             const inputSQLFile = 'test/fixture/mysql/conflict.sql';
@@ -55,7 +58,7 @@ describe('schemat generation integration testing', () => {
                 await (0, testUtility_1.writeTsFile)(inputSQLFile, config, outputFile, db);
             }
             catch (e) {
-                assert.equal(e.message, 'Multiple enums with the same name and contradicting types were found: location_type: ["city","province","country"] and ["city","state","country"]');
+                power_assert_1.default.equal(e.message, 'Multiple enums with the same name and contradicting types were found: location_type: ["city","province","country"] and ["city","state","country"]');
             }
         });
     });

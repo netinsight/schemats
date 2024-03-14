@@ -1,7 +1,7 @@
 import * as assert from 'assert'
 import * as sinon from 'sinon'
-import * as proxyquire from 'proxyquire'
-import * as PgPromise from 'pg-promise'
+import proxyquire from 'proxyquire'
+import PgPromise from 'pg-promise'
 import { TableDefinition } from '../../src/schemaInterfaces'
 import Options from '../../src/options'
 

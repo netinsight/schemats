@@ -1,10 +1,36 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const assert = require("assert");
-const sinon = require("sinon");
-const Index = require("../../src/index");
-const Typescript = require("../../src/typescript");
-const options_1 = require("../../src/options");
+const node_assert_1 = __importDefault(require("node:assert"));
+const sinon = __importStar(require("sinon"));
+const Index = __importStar(require("../../src/index"));
+const Typescript = __importStar(require("../../src/typescript"));
+const options_1 = __importDefault(require("../../src/options"));
 const options = {};
 describe('index', () => {
     const typedTableSandbox = sinon.sandbox.create();
@@ -36,17 +62,17 @@ describe('index', () => {
             tsReflection.generateTableTypes.returns('generatedTableTypes\n');
             tsReflection.generateTableInterface.returns('generatedTableInterfaces\n');
             await Index.typescriptOfTable(db, 'tableName', 'schemaName', new options_1.default(options));
-            assert.deepEqual(dbReflection.getTableTypes.getCall(0).args, [
+            node_assert_1.default.deepEqual(dbReflection.getTableTypes.getCall(0).args, [
                 'tableName',
                 'schemaName',
                 new options_1.default(options)
             ]);
-            assert.deepEqual(tsReflection.generateTableTypes.getCall(0).args, [
+            node_assert_1.default.deepEqual(tsReflection.generateTableTypes.getCall(0).args, [
                 'tableName',
                 'tableTypes',
                 new options_1.default(options)
             ]);
-            assert.deepEqual(tsReflection.generateTableInterface.getCall(0).args, [
+            node_assert_1.default.deepEqual(tsReflection.generateTableInterface.getCall(0).args, [
                 'tableName',
                 'tableTypes',
                 new options_1.default(options)
@@ -58,7 +84,7 @@ describe('index', () => {
             tsReflection.generateTableInterface.returns('generatedTableInterfaces\n');
             const typescriptString = await Index.typescriptOfTable(db, 'tableName', 'schemaName', new options_1.default(options));
             // typescriptString is not string
-            assert.equal(typescriptString, 'generatedTableTypes\ngeneratedTableInterfaces\n');
+            node_assert_1.default.equal(typescriptString, 'generatedTableTypes\ngeneratedTableInterfaces\n');
         });
     });
     describe('typescriptOfSchema', () => {
@@ -68,10 +94,10 @@ describe('index', () => {
             tsReflection.generateTableTypes.returns('generatedTableTypes\n');
             tsReflection.generateEnumType.returns('generatedEnumTypes\n');
             await Index.typescriptOfSchema(db, [], 'schemaName', options);
-            assert.deepEqual(dbReflection.getSchemaTables.getCall(0).args[0], 'schemaName');
-            assert.deepEqual(dbReflection.getEnumTypes.getCall(0).args[0], 'schemaName');
-            assert.deepEqual(tsReflection.generateEnumType.getCall(0).args[0], 'enumTypes');
-            assert.deepEqual(tsReflection.generateTableTypes.getCall(0).args[0], 'tablename');
+            node_assert_1.default.deepEqual(dbReflection.getSchemaTables.getCall(0).args[0], 'schemaName');
+            node_assert_1.default.deepEqual(dbReflection.getEnumTypes.getCall(0).args[0], 'schemaName');
+            node_assert_1.default.deepEqual(tsReflection.generateEnumType.getCall(0).args[0], 'enumTypes');
+            node_assert_1.default.deepEqual(tsReflection.generateTableTypes.getCall(0).args[0], 'tablename');
         });
         it.skip('has tables provided', async () => {
             dbReflection.getSchemaTables.returns(Promise.resolve(['tablename']));
@@ -79,9 +105,9 @@ describe('index', () => {
             tsReflection.generateTableTypes.returns('generatedTableTypes\n');
             tsReflection.generateEnumType.returns('generatedEnumTypes\n');
             await Index.typescriptOfSchema(db, ['differentTablename'], null, options);
-            assert(!dbReflection.getSchemaTables.called);
-            assert.deepEqual(tsReflection.generateEnumType.getCall(0).args[0], 'enumTypes');
-            assert.deepEqual(tsReflection.generateTableTypes.getCall(0).args[0], 'differentTablename');
+            (0, node_assert_1.default)(!dbReflection.getSchemaTables.called);
+            node_assert_1.default.deepEqual(tsReflection.generateEnumType.getCall(0).args[0], 'enumTypes');
+            node_assert_1.default.deepEqual(tsReflection.generateTableTypes.getCall(0).args[0], 'differentTablename');
         });
     });
 });

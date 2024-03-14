@@ -3,11 +3,14 @@
  * Schemats takes sql database schema and creates corresponding typescript definitions
  * Created by xiamx on 2016-08-10.
  */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Options = exports.getDatabase = exports.typescriptOfSchema = exports.validatorToString = exports.typescriptOfTable = void 0;
 const typescript_1 = require("./typescript");
 const schema_1 = require("./schema");
-const options_1 = require("./options");
+const options_1 = __importDefault(require("./options"));
 exports.Options = options_1.default;
 const typescript_formatter_1 = require("typescript-formatter");
 const package_json_1 = require("../package.json");

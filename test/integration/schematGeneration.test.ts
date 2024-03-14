@@ -1,4 +1,4 @@
-import * as assert from 'power-assert'
+import assert from 'power-assert'
 import { Database, getDatabase } from '../../src/index'
 import { writeTsFile, compare, loadSchema } from '../testUtility'
 

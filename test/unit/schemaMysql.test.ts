@@ -1,6 +1,6 @@
-import * as assert from 'assert'
+import assert from 'node:assert'
 import * as sinon from 'sinon'
-import * as mysql from 'mysql'
+import mysql from 'mysql'
 import { MysqlDatabase } from '../../src/schemaMysql'
 import { TableDefinition } from '../../src/schemaInterfaces'
 import Options from '../../src/options'

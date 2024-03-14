@@ -1,4 +1,4 @@
-import * as assert from 'assert'
+import assert from 'node:assert'
 import * as sinon from 'sinon'
 import * as Index from '../../src/index'
 import * as Typescript from '../../src/typescript'

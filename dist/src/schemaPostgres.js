@@ -1,10 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostgresDatabase = void 0;
-const PgPromise = require("pg-promise");
+const pg_promise_1 = __importDefault(require("pg-promise"));
 const lodash_1 = require("lodash");
 const lodash_2 = require("lodash");
-const pgp = PgPromise();
+const pgp = (0, pg_promise_1.default)();
 class PostgresDatabase {
     constructor(connectionString) {
         this.connectionString = connectionString;
