@@ -36,7 +36,7 @@ const MysqlDBReflection = schemaMysql_1.MysqlDatabase;
 describe('MysqlDatabase', () => {
     let db;
     const sandbox = sinon.sandbox.create();
-    before(() => {
+    beforeAll(() => {
         sandbox.stub(mysql_1.default, 'createConnection');
         sandbox.stub(MysqlDBReflection.prototype, 'queryAsync');
         db = new schemaMysql_1.MysqlDatabase('mysql://user:password@localhost/test');
@@ -44,7 +44,7 @@ describe('MysqlDatabase', () => {
     beforeEach(() => {
         sandbox.reset();
     });
-    after(() => {
+    afterAll(() => {
         sandbox.restore();
     });
     describe('query', () => {
@@ -54,10 +54,10 @@ describe('MysqlDatabase', () => {
         });
     });
     describe('queryAsync', () => {
-        before(() => {
+        beforeAll(() => {
             MysqlDBReflection.prototype.queryAsync.restore();
         });
-        after(() => {
+        afterAll(() => {
             sandbox.stub(MysqlDBReflection.prototype, 'queryAsync');
         });
         it('query has error', async () => {
@@ -167,7 +167,7 @@ describe('MysqlDatabase', () => {
     });
     describe('getTableTypes', () => {
         const tableTypesSandbox = sinon.sandbox.create();
-        before(() => {
+        beforeAll(() => {
             tableTypesSandbox.stub(MysqlDBReflection.prototype, 'getEnumTypes');
             tableTypesSandbox.stub(MysqlDBReflection.prototype, 'getTableDefinition');
             tableTypesSandbox.stub(MysqlDBReflection, 'mapTableDefinitionToType');
@@ -175,7 +175,7 @@ describe('MysqlDatabase', () => {
         beforeEach(() => {
             tableTypesSandbox.reset();
         });
-        after(() => {
+        afterAll(() => {
             tableTypesSandbox.restore();
         });
         it('gets custom types from enums', async () => {

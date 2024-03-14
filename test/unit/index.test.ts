@@ -20,7 +20,7 @@ describe('index', () => {
     } as Database
     const tsReflection = Typescript as any
     const dbReflection = db as any
-    before(() => {
+    beforeAll(() => {
         typedTableSandbox.stub(Typescript, 'generateEnumType')
         typedTableSandbox.stub(Typescript, 'generateTableTypes')
         typedTableSandbox.stub(Typescript, 'generateTableInterface')
@@ -28,7 +28,7 @@ describe('index', () => {
     beforeEach(() => {
         typedTableSandbox.reset()
     })
-    after(() => {
+    afterAll(() => {
         typedTableSandbox.restore()
     })
     describe('typescriptOfTable', () => {

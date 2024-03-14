@@ -45,7 +45,7 @@ describe('index', () => {
     };
     const tsReflection = Typescript;
     const dbReflection = db;
-    before(() => {
+    beforeAll(() => {
         typedTableSandbox.stub(Typescript, 'generateEnumType');
         typedTableSandbox.stub(Typescript, 'generateTableTypes');
         typedTableSandbox.stub(Typescript, 'generateTableInterface');
@@ -53,7 +53,7 @@ describe('index', () => {
     beforeEach(() => {
         typedTableSandbox.reset();
     });
-    after(() => {
+    afterAll(() => {
         typedTableSandbox.restore();
     });
     describe('typescriptOfTable', () => {

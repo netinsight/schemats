@@ -9,10 +9,8 @@ const testUtility_1 = require("../testUtility");
 describe('schemat generation integration testing', () => {
     describe('postgres', () => {
         let db;
-        before(async function () {
-            if (!process.env.POSTGRES_URL) {
-                return this.skip();
-            }
+        beforeAll(async () => {
+            expect(process.env.POSTGRES_URL).toBeDefined();
             db = (0, index_1.getDatabase)(process.env.POSTGRES_URL);
             await (0, testUtility_1.loadSchema)(db, './test/fixture/postgres/initCleanup.sql');
         });
@@ -35,10 +33,8 @@ describe('schemat generation integration testing', () => {
     });
     describe('mysql', () => {
         let db;
-        before(async function () {
-            if (!process.env.MYSQL_URL) {
-                return this.skip();
-            }
+        beforeAll(async () => {
+            expect(process.env.MYSQL_URL).toBeDefined();
             db = (0, index_1.getDatabase)(`${process.env.MYSQL_URL}?multipleStatements=true`);
             await (0, testUtility_1.loadSchema)(db, './test/fixture/mysql/initCleanup.sql');
         });
