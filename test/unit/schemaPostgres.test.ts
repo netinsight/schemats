@@ -5,7 +5,7 @@ import { TableDefinition } from '../../src/schemaInterfaces'
 import Options from '../../src/options'
 
 describe('PostgresDatabase', () => {
-    const pg: PostgresDatabase = new PostgresDatabase('something')
+    const pg = new PostgresDatabase('something')
 
     beforeEach(() => {
         (pg as any).db = {
