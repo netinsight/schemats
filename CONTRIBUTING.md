@@ -6,7 +6,12 @@ Steps to contribute:
 
 - Make your awesome changes
 - Run `npm run lint`
-- Optionally, run `POSTGRES_URL="postgres://youruser@localhost/anyemptytestdatabase" MYSQL_URL="mysql://youruser@localhost/anyemptytestdatabase" npm test`
+- Run unit test `npm run test`
+- Run integration test:
+  ```
+  docker compose up -d
+  npm run test:integration
+  ```
 - Submit pull request
 
-Our project runs `npm test` automatically on pull requests via CircleCI.
+Our project runs `npm run test` automatically on pull requests via GitHub Actions.
