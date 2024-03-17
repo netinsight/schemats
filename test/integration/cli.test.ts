@@ -1,30 +1,57 @@
-import { spawnSync } from 'child_process'
-import * as assert from 'power-assert'
+import { spawnSync } from 'node:child_process'
+
+import { getDatabase } from '../../src/index'
+import { loadSchema } from '../testUtility'
 
 describe('schemats cli tool integration testing', () => {
+    it('show usage', () => {
+        const {status, stdout, stderr} = spawnSync('npx', ['.'], { encoding: 'utf-8' })
+        expect(status).toBe(1)
+        expect(stdout).toBe('')
+        expect(stderr).toMatch(/^Usage: schemats <command> \[options\]/)
+    })
+
     describe('schemats generate postgres', () => {
+        const conn = process.env.POSTGRES_URL!
+        beforeAll(async () => {
+          expect(conn).toMatch(/^postgres:\/\/.+/)
+            const db = getDatabase(conn)
+            await loadSchema(db, './test/fixture/postgres/initCleanup.sql')
+        })
+
         it('should run without error', () => {
-            expect(process.env.POSTGRES_URL).toBeDefined()
-            let {status, stdout, stderr} = spawnSync('node', [
-                'bin/schemats', 'generate',
-                '-c', process.env.POSTGRES_URL || '',
+            const res = spawnSync('npx', [
+                '.', 'generate',
+                '-c', conn!,
                 '-o', '/tmp/schemats_cli_postgres.ts'
             ], { encoding: 'utf-8' })
-            console.log('opopopopop', stdout, stderr)
-            assert.equal(0, status)
+            expect(res).toEqual(expect.objectContaining({
+                status: 0,
+                stdout: '',
+                stderr: '',
+            }))
         })
     })
 
     describe('schemats generate mysql', () => {
+        const conn = process.env.MYSQL_URL!
+        beforeAll(async () => {
+            expect(conn).toMatch(/^mysql:\/\/.+/)
+            const db = getDatabase(`${process.env.MYSQL_URL}?multipleStatements=true`)
+            await loadSchema(db, './test/fixture/mysql/initCleanup.sql')
+        })
+
         it('should run without error', () => {
-            expect(process.env.MYSQL_URL).toBeDefined()
-            let {status} = spawnSync('node', [
-                'bin/schemats', 'generate',
-                '-c', process.env.MYSQL_URL || '',
-                '-s', 'test',
-                '-o', '/tmp/schemats_cli_postgres.ts'
-            ])
-            assert.equal(0, status)
+            const res = spawnSync('npx', [
+                '.', 'generate',
+                '-c', conn,
+                '-o', '/tmp/schemats_cli_mysql.ts'
+            ], { encoding: 'utf-8'})
+            expect(res).toEqual(expect.objectContaining({
+                status: 0,
+                stdout: '',
+                stderr: '',
+            }))
         })
     })
 })
