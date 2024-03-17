@@ -16,7 +16,7 @@
     "dependency-check": "dependency-check . --entry dist/bin/schemats.js --missing --no-dev",
     "test": "npm run test:unit",
     "test:unit": "jest --testMatch '<rootDir>/test/unit/**/*.test.ts'",
-    "test:integration": "POSTGRES_URL=postgres://user:password@127.0.0.1:5432/test jest --testMatch '<rootDir>/test/integration/**/*.test.ts'",
+    "test:integration": "POSTGRES_URL=postgres://user:password@127.0.0.1:5432/test MYSQL_URL=mysql://user:password@127.0.0.1:3306/test jest --testMatch '<rootDir>/test/integration/**/*.test.ts'",
     "prepublish": "npm run build",
     "coverage": "npm run test:unit -- --coverage"
   },

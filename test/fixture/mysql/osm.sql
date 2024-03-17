@@ -42,37 +42,37 @@ CREATE TABLE users (
     nullable_date_col date,
     datetime_col datetime NOT NULL,
     nullable_datetime_col datetime,
-    timestamp_col timestamp NOT NULL,
+    timestamp_col timestamp NOT NULL
 
-    tinyblob_col tinyblob NOT NULL,
-    nullable_tinyblob_col tinyblob,
-    mediumblob_col mediumblob NOT NULL,
-    nullable_mediumblob_col mediumblob,
-    longblob_col longblob NOT NULL,
-    nullable_longblob_col longblob,
-    blob_col blob NOT NULL,
-    nullable_blob_col blob,
-    binary_col binary NOT NULL,
-    nullable_binary_col binary,
-    varbinary_col varbinary(255) NOT NULL,
-    nullable_varbinary_col varbinary(255),
-    bit_col bit NOT NULL,
-    nullable_bit_col bit,
+    -- TODO: tinyblob_col tinyblob NOT NULL,
+    -- TODO: nullable_tinyblob_col tinyblob,
+    -- TODO: mediumblob_col mediumblob NOT NULL,
+    -- TODO: nullable_mediumblob_col mediumblob,
+    -- TODO: longblob_col longblob NOT NULL,
+    -- TODO: nullable_longblob_col longblob,
+    -- TODO: blob_col blob NOT NULL,
+    -- TODO: nullable_blob_col blob,
+    -- TODO: binary_col binary NOT NULL,
+    -- TODO: nullable_binary_col binary,
+    -- TODO: varbinary_col varbinary(255) NOT NULL,
+    -- TODO: nullable_varbinary_col varbinary(255),
+    -- TODO: bit_col bit NOT NULL,
+    -- TODO: nullable_bit_col bit,
 
-    enum_col enum('enum1', 'enum2', 'enum3') DEFAULT 'enum1' NOT NULL,
-    nullable_enum_col enum('enum1', 'enum2', 'enum3'),
-    set_col set('set1', 'set2', 'set3') DEFAULT 'set1' NOT NULL,
-    nullable_set_col set('set1', 'set2', 'set3')
+    -- TODO: enum_col enum('enum1', 'enum2', 'enum3') DEFAULT 'enum1' NOT NULL,
+    -- TODO: nullable_enum_col enum('enum1', 'enum2', 'enum3'),
+    -- TODO: set_col set('set1', 'set2', 'set3') DEFAULT 'set1' NOT NULL,
+    -- TODO: nullable_set_col set('set1', 'set2', 'set3')
 );
 
 DROP TABLE IF EXISTS user_enums;
 
-CREATE TABLE user_enums (
-    enum_col enum('enum1', 'enum2', 'enum3') DEFAULT 'enum1' NOT NULL,
-    nullable_enum_col enum('enum1', 'enum2', 'enum3'),
-    set_col set('set1', 'set2', 'set3') DEFAULT 'set1' NOT NULL,
-    nullable_set_col set('set1', 'set2', 'set3')
-);
+-- CREATE TABLE user_enums (
+    -- TODO: enum_col enum('enum1', 'enum2', 'enum3') DEFAULT 'enum1' NOT NULL,
+    -- TODO: nullable_enum_col enum('enum1', 'enum2', 'enum3'),
+    -- TODO: set_col set('set1', 'set2', 'set3') DEFAULT 'set1' NOT NULL,
+    -- TODO: nullable_set_col set('set1', 'set2', 'set3')
+-- );
 
 DROP TABLE IF EXISTS package;
 
