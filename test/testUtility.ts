@@ -46,8 +46,8 @@ export async function loadSchema(db: Database, file: string) {
 
 export async function writeTsFile(inputSQLFile: string, inputConfigFile: string,  outputFile: string, db: Database) {
     await loadSchema(db, inputSQLFile)
-    const config: any = require(inputConfigFile)
-    let formattedOutput = await typescriptOfSchema(
+    const config = require(inputConfigFile)
+    const formattedOutput = await typescriptOfSchema(
         db,
         config.tables,
         config.schema,
