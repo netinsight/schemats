@@ -1,90 +1,88 @@
-import * as assert from 'assert'
-import * as sinon from 'sinon'
-import * as Index from '../../src/index'
+import { typescriptOfTable, typescriptOfSchema } from '../../src/index'
+jest.mock('../../src/typescript')
 import * as Typescript from '../../src/typescript'
-import { Database } from '../../src/schema'
-import Options, { OptionValues } from '../../src/options'
-
-const options: OptionValues = {}
+import type { Database } from '../../src/schema'
+import Options from '../../src/options'
 
 describe('index', () => {
-    const typedTableSandbox = sinon.sandbox.create()
-    const db = {
-        getDefaultSchema: typedTableSandbox.stub(),
-        getTableTypes: typedTableSandbox.stub(),
-        query: typedTableSandbox.stub(),
-        getEnumTypes: typedTableSandbox.stub(),
-        getTableDefinition: typedTableSandbox.stub(),
-        getSchemaTables: typedTableSandbox.stub(),
+    const options = new Options({})
+    const db: Database = {
+        getDefaultSchema: jest.fn(),
+        getTableTypes: jest.fn().mockResolvedValue({}),
+        query: jest.fn(),
+        getEnumTypes: jest.fn(),
+        getTableDefinition: jest.fn(),
+        getSchemaTables: jest.fn().mockResolvedValue([]),
         connectionString: 'sql://'
-    } as Database
-    const tsReflection = Typescript as any
-    const dbReflection = db as any
-    before(() => {
-        typedTableSandbox.stub(Typescript, 'generateEnumType')
-        typedTableSandbox.stub(Typescript, 'generateTableTypes')
-        typedTableSandbox.stub(Typescript, 'generateTableInterface')
-    })
-    beforeEach(() => {
-        typedTableSandbox.reset()
-    })
-    after(() => {
-        typedTableSandbox.restore()
-    })
+    }
+
+    beforeEach(() => jest.clearAllMocks())
+
     describe('typescriptOfTable', () => {
         it('calls functions with correct params', async () => {
-            dbReflection.getTableTypes.returns(Promise.resolve('tableTypes'))
-            tsReflection.generateTableTypes.returns('generatedTableTypes\n')
-            tsReflection.generateTableInterface.returns('generatedTableInterfaces\n')
-            await Index.typescriptOfTable(db, 'tableName', 'schemaName', new Options(options))
-            assert.deepEqual(dbReflection.getTableTypes.getCall(0).args, [
-                'tableName',
-                'schemaName',
-                new Options(options)
-            ])
-            assert.deepEqual(tsReflection.generateTableTypes.getCall(0).args, [
-                'tableName',
-                'tableTypes',
-                new Options(options)
-            ])
-            assert.deepEqual(tsReflection.generateTableInterface.getCall(0).args, [
-                'tableName',
-                'tableTypes',
-                new Options(options)
-            ])
+            const spyGenerateTableTypes = jest.spyOn(Typescript, 'generateTableTypes').mockReturnValueOnce({
+                fields: '',
+                validator: { tableName: 'someTableName', fieldValidators: []}
+            })
+            const spyGenerateTableInterface = jest.spyOn(Typescript, 'generateTableInterface')
+
+            await typescriptOfTable(db, 'tableName', 'schemaName', options)
+
+            expect(db.getTableTypes).toHaveBeenCalledWith('tableName', 'schemaName', options)
+            expect(spyGenerateTableTypes).toHaveBeenCalledWith(
+              'tableName',
+              {},
+              options
+            )
+            expect(spyGenerateTableInterface).toHaveBeenCalledWith(
+              'tableName',
+              {},
+              options
+            )
         })
-        it.skip('merges string results', async () => {
-            dbReflection.getTableTypes.returns(Promise.resolve('tableTypes'))
-            tsReflection.generateTableTypes.returns('generatedTableTypes\n')
-            tsReflection.generateTableInterface.returns('generatedTableInterfaces\n')
-            const typescriptString = await Index.typescriptOfTable(db, 'tableName', 'schemaName', new Options(options))
-            // typescriptString is not string
-            assert.equal(typescriptString, 'generatedTableTypes\ngeneratedTableInterfaces\n')
+
+        it('merges string results', async () => {
+            jest.spyOn(Typescript, 'generateTableTypes').mockReturnValueOnce({
+                fields: 'generatedTableTypes\n',
+                validator: { tableName: 'someTableName', fieldValidators: [] }
+            })
+            jest.spyOn(Typescript, 'generateTableInterface').mockReturnValueOnce('generatedTableInterfaces\n')
+
+            const res = await typescriptOfTable(db, 'tableName', 'schemaName', new Options({}))
+
+            expect(res).toEqual({
+                interfaces: 'generatedTableTypes\ngeneratedTableInterfaces\n',
+                validator: { tableName: 'someTableName', fieldValidators: [] }
+            })
         })
     })
+
     describe('typescriptOfSchema', () => {
-        it.skip('has schema', async () => {
-            dbReflection.getSchemaTables.returns(Promise.resolve(['tablename']))
-            dbReflection.getEnumTypes.returns(Promise.resolve('enumTypes'))
-            tsReflection.generateTableTypes.returns('generatedTableTypes\n')
-            tsReflection.generateEnumType.returns('generatedEnumTypes\n')
-            await Index.typescriptOfSchema(db, [], 'schemaName', options)
-
-            assert.deepEqual(dbReflection.getSchemaTables.getCall(0).args[0], 'schemaName')
-            assert.deepEqual(dbReflection.getEnumTypes.getCall(0).args[0], 'schemaName')
-            assert.deepEqual(tsReflection.generateEnumType.getCall(0).args[0], 'enumTypes')
-            assert.deepEqual(tsReflection.generateTableTypes.getCall(0).args[0], 'tablename')
+        const spyGenerateEnumType = jest.spyOn(Typescript, 'generateEnumType').mockReturnValue('generatedEnumTypes\n')
+        const spyGenerateTableTypes = jest.spyOn(Typescript, 'generateTableTypes').mockReturnValue({
+            fields: 'generatedTableTypes\n',
+            validator: { tableName: 'someTableName', fieldValidators: [] }
         })
-        it.skip('has tables provided', async () => {
-            dbReflection.getSchemaTables.returns(Promise.resolve(['tablename']))
-            dbReflection.getEnumTypes.returns(Promise.resolve('enumTypes'))
-            tsReflection.generateTableTypes.returns('generatedTableTypes\n')
-            tsReflection.generateEnumType.returns('generatedEnumTypes\n')
-            await Index.typescriptOfSchema(db, ['differentTablename'], null, options)
 
-            assert(!dbReflection.getSchemaTables.called)
-            assert.deepEqual(tsReflection.generateEnumType.getCall(0).args[0], 'enumTypes')
-            assert.deepEqual(tsReflection.generateTableTypes.getCall(0).args[0], 'differentTablename')
+        it('has schema', async () => {
+            db.getSchemaTables = jest.fn().mockResolvedValueOnce(['tablename'])
+
+            await typescriptOfSchema(db, [], 'schemaName', {})
+
+            expect(db.getSchemaTables).toHaveBeenCalledWith('schemaName')
+            expect(db.getEnumTypes).toHaveBeenCalledWith('schemaName')
+            expect(spyGenerateEnumType).toHaveBeenCalledWith(undefined, options)
+            expect(spyGenerateTableTypes).toHaveBeenCalledWith('tablename', {}, options)
+        })
+
+        it('has tables provided', async () => {
+            db.getEnumTypes = jest.fn().mockReturnValueOnce('enumTypes')
+
+            await typescriptOfSchema(db, ['differentTablename'], null, {})
+
+            expect(db.getSchemaTables).not.toHaveBeenCalled()
+            expect(spyGenerateEnumType).toHaveBeenCalledWith('enumTypes', options)
+            expect(spyGenerateTableTypes).toHaveBeenCalledWith('differentTablename', {}, options)
         })
     })
 })

@@ -1,15 +1,13 @@
-import * as assert from 'power-assert'
+import assert from 'power-assert'
 import { Database, getDatabase } from '../../src/index'
 import { writeTsFile, compare, loadSchema } from '../testUtility'
 
 describe('schemat generation integration testing', () => {
     describe('postgres', () => {
         let db: Database
-        before(async function () {
-            if (!process.env.POSTGRES_URL) {
-                return this.skip()
-            }
-            db = getDatabase(process.env.POSTGRES_URL)
+        beforeAll(async () => {
+            expect(process.env.POSTGRES_URL).toBeDefined()
+            db = getDatabase(process.env.POSTGRES_URL!)
             await loadSchema(db, './test/fixture/postgres/initCleanup.sql')
         })
 
@@ -33,10 +31,8 @@ describe('schemat generation integration testing', () => {
 
     describe('mysql', () => {
         let db: Database
-        before(async function () {
-            if (!process.env.MYSQL_URL) {
-                return this.skip()
-            }
+        beforeAll(async () => {
+            expect(process.env.MYSQL_URL).toBeDefined()
             db = getDatabase(`${process.env.MYSQL_URL}?multipleStatements=true`)
             await loadSchema(db, './test/fixture/mysql/initCleanup.sql')
         })

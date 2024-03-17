@@ -1,4 +1,4 @@
-import * as PgPromise from 'pg-promise'
+import PgPromise from 'pg-promise'
 import { mapValues } from 'lodash'
 import { keys } from 'lodash'
 import Options from './options'
@@ -71,7 +71,7 @@ export class PostgresDatabase implements Database {
                     return column
                 case '_varchar':
                 case '_text':
-                case '_citext':                    
+                case '_citext':
                 case '_uuid':
                 case '_bytea':
                     column.tsType = 'Array<string>'
@@ -149,7 +149,7 @@ export class PostgresDatabase implements Database {
             'SELECT table_name ' +
             'FROM information_schema.columns ' +
             'WHERE table_schema = $1 ' +
-            'GROUP BY table_name ' + 
+            'GROUP BY table_name ' +
             'ORDER BY table_name',
             [schemaName],
             (schemaItem: {table_name: string}) => schemaItem.table_name
