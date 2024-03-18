@@ -17,7 +17,7 @@ interface SchematsConfig {
     noHeader: boolean,
 }
 
-let argv: SchematsConfig = yargs
+const argv: SchematsConfig = yargs
     .usage('Usage: $0 <command> [options]')
     .global('config')
     .default('config', 'schemats.json')
@@ -25,7 +25,6 @@ let argv: SchematsConfig = yargs
     .env('SCHEMATS')
     .command('generate', 'generate type definition')
     .demand(1)
-    // tslint:disable-next-line
     .example('$0 generate -c postgres://username:password@localhost/db -t table1 -t table2 -s schema -o interface_output.ts', 'generate typescript interfaces from schema')
     .demand('c')
     .alias('c', 'conn')
@@ -58,7 +57,7 @@ let argv: SchematsConfig = yargs
             }
         }
 
-        let formattedOutput = await typescriptOfSchema(
+        const formattedOutput = await typescriptOfSchema(
             argv.conn, argv.table, argv.schema, { camelCase: argv.camelCase, writeHeader: !argv.noHeader })
         fs.writeFileSync(argv.output, formattedOutput)
 

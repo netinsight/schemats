@@ -31,7 +31,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const yargs = __importStar(require("yargs"));
 const fs = __importStar(require("fs"));
 const index_1 = require("../src/index");
-let argv = yargs
+const argv = yargs
     .usage('Usage: $0 <command> [options]')
     .global('config')
     .default('config', 'schemats.json')
@@ -39,7 +39,6 @@ let argv = yargs
     .env('SCHEMATS')
     .command('generate', 'generate type definition')
     .demand(1)
-    // tslint:disable-next-line
     .example('$0 generate -c postgres://username:password@localhost/db -t table1 -t table2 -s schema -o interface_output.ts', 'generate typescript interfaces from schema')
     .demand('c')
     .alias('c', 'conn')
@@ -71,7 +70,7 @@ let argv = yargs
                 argv.table = [argv.table];
             }
         }
-        let formattedOutput = await (0, index_1.typescriptOfSchema)(argv.conn, argv.table, argv.schema, { camelCase: argv.camelCase, writeHeader: !argv.noHeader });
+        const formattedOutput = await (0, index_1.typescriptOfSchema)(argv.conn, argv.table, argv.schema, { camelCase: argv.camelCase, writeHeader: !argv.noHeader });
         fs.writeFileSync(argv.output, formattedOutput);
     }
     catch (e) {

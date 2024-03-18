@@ -8,11 +8,11 @@ export declare class MysqlDatabase implements Database {
     private static mapTableDefinitionToType;
     private static parseMysqlEnumeration;
     private static getEnumNameFromColumn;
-    query(queryString: string): Promise<Object[]>;
-    getEnumTypes(schema?: string): Promise<any>;
+    query(queryString: string): Promise<Record<string, any>[]>;
+    getEnumTypes(schema?: string): Promise<Record<string, any>>;
     getTableDefinition(tableName: string, tableSchema: string): Promise<TableDefinition>;
     getTableTypes(tableName: string, tableSchema: string, options: Options): Promise<TableDefinition>;
     getSchemaTables(schemaName: string): Promise<string[]>;
-    queryAsync(queryString: string, escapedValues?: Array<string>): Promise<Object[]>;
+    queryAsync(queryString: string, escapedValues?: string[]): Promise<Record<string, any>[]>;
     getDefaultSchema(): string;
 }

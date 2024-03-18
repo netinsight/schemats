@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-unsafe-return: 'off' */
 import assert from 'node:assert'
 
 import { MysqlDatabase } from '../../src/schemaMysql'

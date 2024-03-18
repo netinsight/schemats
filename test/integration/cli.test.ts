@@ -22,7 +22,7 @@ describe('schemats cli tool integration testing', () => {
         it('should run without error', () => {
             const res = spawnSync('npx', [
                 '.', 'generate',
-                '-c', conn!,
+                '-c', conn,
                 '-o', '/tmp/schemats_cli_postgres.ts'
             ], { encoding: 'utf-8' })
             expect(res).toEqual(expect.objectContaining({

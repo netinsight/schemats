@@ -9,7 +9,7 @@ function nameIsReservedKeyword(name) {
     const reservedKeywords = ['string', 'number', 'package', 'object'];
     return reservedKeywords.indexOf(name) !== -1;
 }
-function normalizeName(name, options) {
+function normalizeName(name) {
     if (nameIsReservedKeyword(name)) {
         return name + '_';
     }
@@ -23,10 +23,10 @@ function generateTableInterface(tableNameRaw, tableDefinition, options) {
     Object.keys(tableDefinition)
         .map((c) => options.transformColumnName(c))
         .forEach((columnName) => {
-        members += `${columnName}: ${tableName}Fields.${normalizeName(columnName, options)};\n`;
+        members += `${columnName}: ${tableName}Fields.${normalizeName(columnName)};\n`;
     });
     return `
-        export interface ${normalizeName(tableName, options)} {
+        export interface ${normalizeName(tableName)} {
         ${members}
         }
     `;
@@ -34,7 +34,7 @@ function generateTableInterface(tableNameRaw, tableDefinition, options) {
 exports.generateTableInterface = generateTableInterface;
 function generateEnumType(enumObject, options) {
     let enumString = '';
-    for (let enumNameRaw in enumObject) {
+    for (const enumNameRaw in enumObject) {
         const enumName = options.transformTypeName(enumNameRaw);
         enumString += `export type ${enumName} = `;
         enumString += enumObject[enumNameRaw]
@@ -49,10 +49,10 @@ function generateTableTypes(tableNameRaw, tableDefinition, options) {
     const tableName = options.transformTypeName(tableNameRaw);
     let fields = '';
     Object.keys(tableDefinition).forEach((columnNameRaw) => {
-        let type = tableDefinition[columnNameRaw].tsType;
-        let nullable = tableDefinition[columnNameRaw].nullable ? '| null' : '';
+        const type = tableDefinition[columnNameRaw].tsType;
+        const nullable = tableDefinition[columnNameRaw].nullable ? '| null' : '';
         const columnName = options.transformColumnName(columnNameRaw);
-        fields += `export type ${normalizeName(columnName, options)} = ${type}${nullable};\n`;
+        fields += `export type ${normalizeName(columnName)} = ${type}${nullable};\n`;
     });
     const fieldValidators = [];
     for (const [name, definition] of Object.entries(tableDefinition)) {

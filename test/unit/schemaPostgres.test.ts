@@ -44,7 +44,7 @@ describe('PostgresDatabase', () => {
         })
 
         it('handles response from db', async () => {
-            let enums = await pg.getEnumTypes()
+            const enums = await pg.getEnumTypes()
             const callback = (pg as any).db.each.mock.calls[0][2]
             const dbResponse = [
                 {name: 'name', value: 'value1'},
@@ -68,7 +68,7 @@ describe('PostgresDatabase', () => {
         })
 
         it('handles response from db', async () => {
-            let tableDefinition = await pg.getTableDefinition('tableName', 'schemaName')
+            const tableDefinition = await pg.getTableDefinition('tableName', 'schemaName')
             const callback = (pg as any).db.each.mock.calls[0][2]
             const dbResponse = [
                 {column_name: 'col1', udt_name: 'int2', is_nullable: 'YES'},

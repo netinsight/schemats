@@ -10,9 +10,9 @@ export class MysqlDatabase implements Database {
 
     constructor (public connectionString: string) {
         this.db = mysql.createConnection(connectionString)
-        let url = urlParse(connectionString, true)
-        if (url && url.pathname) {
-            let database = url.pathname.substr(1)
+        const url = urlParse(connectionString, true)
+        if (url?.pathname) {
+            const database = url.pathname.substr(1)
             this.defaultSchema = database
         } else {
             this.defaultSchema = 'public'
@@ -95,7 +95,7 @@ export class MysqlDatabase implements Database {
     }
 
     public async getEnumTypes (schema?: string) {
-        let enums: any = {}
+        const enums: Record<string, any> = {}
         let enumSchemaWhereClause: string
         let params: string[]
         if (schema) {
@@ -125,7 +125,7 @@ export class MysqlDatabase implements Database {
     }
 
     public async getTableDefinition (tableName: string, tableSchema: string) {
-        let tableDefinition: TableDefinition = {}
+        const tableDefinition: TableDefinition = {}
 
         const tableColumns = await this.queryAsync(
             'SELECT column_name, data_type, is_nullable ' +
@@ -146,7 +146,7 @@ export class MysqlDatabase implements Database {
 
     public async getTableTypes (tableName: string, tableSchema: string, options: Options) {
         const enumTypes: any = await this.getEnumTypes(tableSchema)
-        let customTypes = keys(enumTypes)
+        const customTypes = keys(enumTypes)
         return MysqlDatabase.mapTableDefinitionToType(await this.getTableDefinition(tableName, tableSchema), customTypes, options)
     }
 
@@ -161,9 +161,9 @@ export class MysqlDatabase implements Database {
         return schemaTables.map((schemaItem) => schemaItem.table_name)
     }
 
-    public queryAsync (queryString: string, escapedValues?: Array<string>): Promise<Object[]> {
+    public queryAsync (queryString: string, escapedValues?: string[]): Promise<Record<string, any>[]> {
         return new Promise((resolve, reject) => {
-            this.db.query(queryString, escapedValues, (error: Error, results: Array<Object>) => {
+            this.db.query(queryString, escapedValues, (error: Error, results: Record<string, any>[]) => {
                 if (error) {
                     return reject(error)
                 }

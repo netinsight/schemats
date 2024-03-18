@@ -15,8 +15,8 @@ exports.Options = options_1.default;
 const typescript_formatter_1 = require("typescript-formatter");
 const package_json_1 = require("../package.json");
 function getTime() {
-    let padTime = (value) => `0${value}`.slice(-2);
-    let time = new Date();
+    const padTime = (value) => `0${value}`.slice(-2);
+    const time = new Date();
     const yyyy = time.getFullYear();
     const MM = padTime(time.getMonth() + 1);
     const dd = padTime(time.getDate());
@@ -26,7 +26,7 @@ function getTime() {
     return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
 }
 function buildHeader(db, tables, schema, options) {
-    let commands = [
+    const commands = [
         'schemats',
         'generate',
         '-c',
@@ -58,7 +58,7 @@ async function typescriptOfTable(db, table, schema, options = new options_1.defa
         db = (0, schema_1.getDatabase)(db);
     }
     let interfaces = '';
-    let tableTypes = await db.getTableTypes(table, schema, options);
+    const tableTypes = await db.getTableTypes(table, schema, options);
     const { fields, validator } = (0, typescript_1.generateTableTypes)(table, tableTypes, options);
     interfaces += fields;
     interfaces += (0, typescript_1.generateTableInterface)(table, tableTypes, options);
@@ -185,7 +185,7 @@ export const Validator = {`
         validatorStrings.push(validatorToString(validator));
     }
     validatorStrings.push('}');
-    let output = '/* tslint:disable */\n\n';
+    let output = '';
     if (optionsObject.options.writeHeader) {
         output += buildHeader(db, tables, schema, options);
     }
@@ -196,7 +196,7 @@ export const Validator = {`
         replace: false,
         verify: false,
         tsconfig: true,
-        tslint: true,
+        tslint: false,
         editorconfig: true,
         tsfmt: true,
         vscode: false,

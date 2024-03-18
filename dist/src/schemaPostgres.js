@@ -99,8 +99,8 @@ class PostgresDatabase {
         return this.db.query(queryString);
     }
     async getEnumTypes(schema) {
-        let enums = {};
-        let enumSchemaWhereClause = schema ? pgp.as.format(`where n.nspname = $1`, schema) : '';
+        const enums = {};
+        const enumSchemaWhereClause = schema ? pgp.as.format(`where n.nspname = $1`, schema) : '';
         await this.db.each('select n.nspname as schema, t.typname as name, e.enumlabel as value ' +
             'from pg_type t ' +
             'join pg_enum e on t.oid = e.enumtypid ' +
@@ -115,7 +115,7 @@ class PostgresDatabase {
         return enums;
     }
     async getTableDefinition(tableName, tableSchema) {
-        let tableDefinition = {};
+        const tableDefinition = {};
         await this.db.each('SELECT column_name, udt_name, is_nullable ' +
             'FROM information_schema.columns ' +
             'WHERE table_name = $1 and table_schema = $2', [tableName, tableSchema], (schemaItem) => {
@@ -127,8 +127,8 @@ class PostgresDatabase {
         return tableDefinition;
     }
     async getTableTypes(tableName, tableSchema, options) {
-        let enumTypes = await this.getEnumTypes();
-        let customTypes = (0, lodash_2.keys)(enumTypes);
+        const enumTypes = await this.getEnumTypes();
+        const customTypes = (0, lodash_2.keys)(enumTypes);
         return PostgresDatabase.mapTableDefinitionToType(await this.getTableDefinition(tableName, tableSchema), customTypes, options);
     }
     async getSchemaTables(schemaName) {

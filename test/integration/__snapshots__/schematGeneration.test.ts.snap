@@ -1,8 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`schemats generation integration testing mysql Basic generation 1`] = `
-"/* tslint:disable */
-
+"
 export namespace usersFields {
     export type char_col = string;
     export type nullable_char_col = string | null;
@@ -255,9 +254,7 @@ export const Validator = {
 `;
 
 exports[`schemats generation integration testing postgres Basic generation 1`] = `
-"/* tslint:disable */
-
-export type format_enum = 'html' | 'markdown' | 'text';
+"export type format_enum = 'html' | 'markdown' | 'text';
 export type user_status_enum = 'active' | 'confirmed' | 'deleted' | 'pending' | 'suspended';
 
 export namespace usersFields {
@@ -519,9 +516,7 @@ export const Validator = {
 `;
 
 exports[`schemats generation integration testing postgres Camelcase generation 1`] = `
-"/* tslint:disable */
-
-export type FormatEnum = 'html' | 'markdown' | 'text';
+"export type FormatEnum = 'html' | 'markdown' | 'text';
 export type UserStatusEnum = 'active' | 'confirmed' | 'deleted' | 'pending' | 'suspended';
 
 export namespace UsersFields {
