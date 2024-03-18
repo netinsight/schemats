@@ -218,7 +218,7 @@ export const Validator = {`
     }
     validatorStrings.push('}')
 
-    let output = '/* tslint:disable */\n\n'
+    let output = ''
     if (optionsObject.options.writeHeader) {
         output += buildHeader(db, tables, schema, options)
     }
@@ -230,7 +230,7 @@ export const Validator = {`
         replace: false,
         verify: false,
         tsconfig: true,
-        tslint: true,
+        tslint: false,
         editorconfig: true,
         tsfmt: true,
         vscode: false,
