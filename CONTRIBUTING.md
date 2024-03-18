@@ -8,10 +8,10 @@ Steps to contribute:
 - Run `npm run lint`
 - Run unit test `npm run test`
 - Run integration test:
-  ```
+  ```sh
   docker compose up -d
   npm run test:integration
   ```
 - Submit pull request
 
-Our project runs `npm run test` automatically on pull requests via GitHub Actions.
+Our project runs the above tests automatically on pull requests via GitHub Actions.
