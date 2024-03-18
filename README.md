@@ -39,20 +39,19 @@ For an overview on the motivation and rational behind this project, please take 
 
 ### Installing Schemats
 
-```
+```sh
 npm install -g schemats
 ```
 
 ### Generating the type definition from schema
 
-```
+```sh
 schemats generate -c postgres://postgres@localhost/osm -t users -o osm.ts
 schemats generate -c mysql://mysql@localhost/osm -t users -o osm.ts
 ```
 
 
-The above commands will generate typescript interfaces for [`osm`](test/osm_schema.sql) database
-with table [`users`](test/osm_schema.sql#L18). The resulting file is stored as [`osm.ts`](test/example/osm.ts).
+The above commands will generate typescript interfaces `osm.ts` for `users` table in `osm` database.
 
 ### Generating the type definition for all the tables in a postgres schema
 
@@ -60,7 +59,7 @@ To generate all type definitions for all the tables within the schema 'public':
 
 *Note: MySQL does not have a default public schema, but should it have a schema named public, this will still work.*
 
-```
+```sh
 schemats generate -c postgres://postgres@localhost/osm -s public -o osm.ts
 schemats generate -c mysql://mysql@localhost/osm -s public -o osm.ts
 ```
@@ -123,42 +122,3 @@ With generated type definition for our database schema, we can write code with a
 ### Using schemats as a library
 
 Schemats exposes two high-level functions for generating typescript definition from a database schema. They can be used by a build tool such as grunt and gulp.
-
-### Upgrading to v1.0
-
-#### Deprecation of Namespace
-Version 1.0 deprecates generating schema typescript files with namespace.
-
-Instead of generating schema typescript files with
-
-```bash
-schemats generate -c postgres://postgres@localhost/db -n yournamespace -o db.ts
-```
-
-and import them with
-```typescript
-import {yournamespace} from './db'
-```
-
-It is now encouraged to generate without namespace
-```bash
-schemats generate -c postgres://postgres@localhost/db -o db.ts
-```
-and import them with
-```typescript
-import * as yournamespace from './db'
-// or
-import {table_a, table_b} from './db'
-```
-
-As [TypeScript's documentation](https://www.typescriptlang.org/docs/handbook/namespaces-and-modules.html) describes,
-having a top level namespace is needless. This was discussed in [#25](https://github.com/SweetIQ/schemats/issues/25).
-
-Generating schema typescript files with namespace still works in v1.0, but it is discouraged and subjected to
-removal in the future.
-
-#### Support Strict Null-Checking
-
-Version 1.0 [supports](https://github.com/SweetIQ/schemats/issues/19)
- [strict null-checking](https://github.com/Microsoft/TypeScript/pull/7140)
-and reflects the _NOT NULL_ constraint defined in PostgreSQL schema.
