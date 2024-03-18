@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/unbound-method: 'off' */
 import { typescriptOfTable, typescriptOfSchema } from '../../src/index'
 jest.mock('../../src/typescript')
 import * as Typescript from '../../src/typescript'

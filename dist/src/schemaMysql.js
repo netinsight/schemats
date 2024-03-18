@@ -31,9 +31,9 @@ class MysqlDatabase {
     constructor(connectionString) {
         this.connectionString = connectionString;
         this.db = mysql.createConnection(connectionString);
-        let url = (0, url_1.parse)(connectionString, true);
-        if (url && url.pathname) {
-            let database = url.pathname.substr(1);
+        const url = (0, url_1.parse)(connectionString, true);
+        if (url?.pathname) {
+            const database = url.pathname.substr(1);
             this.defaultSchema = database;
         }
         else {
@@ -114,7 +114,7 @@ class MysqlDatabase {
         return this.queryAsync(queryString);
     }
     async getEnumTypes(schema) {
-        let enums = {};
+        const enums = {};
         let enumSchemaWhereClause;
         let params;
         if (schema) {
@@ -141,7 +141,7 @@ class MysqlDatabase {
         return enums;
     }
     async getTableDefinition(tableName, tableSchema) {
-        let tableDefinition = {};
+        const tableDefinition = {};
         const tableColumns = await this.queryAsync('SELECT column_name, data_type, is_nullable ' +
             'FROM information_schema.columns ' +
             'WHERE table_name = ? and table_schema = ?', [tableName, tableSchema]);
@@ -157,7 +157,7 @@ class MysqlDatabase {
     }
     async getTableTypes(tableName, tableSchema, options) {
         const enumTypes = await this.getEnumTypes(tableSchema);
-        let customTypes = (0, lodash_1.keys)(enumTypes);
+        const customTypes = (0, lodash_1.keys)(enumTypes);
         return MysqlDatabase.mapTableDefinitionToType(await this.getTableDefinition(tableName, tableSchema), customTypes, options);
     }
     async getSchemaTables(schemaName) {

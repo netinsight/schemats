@@ -1,6 +1,11 @@
 import { Database, getDatabase, typescriptOfSchema } from '../../src/index'
 import { loadSchema } from '../testUtility'
 
+import postgresOsm from '../fixture/postgres/osm.json'
+import postgresOsmCamelcase from '../fixture/postgres/osm-camelcase.json'
+import mysqlOsm from '../fixture/mysql/osm.json'
+import mysqlConflict from '../fixture/mysql/conflict.json'
+
 describe('schemats generation integration testing', () => {
     describe('postgres', () => {
         let db: Database
@@ -12,7 +17,7 @@ describe('schemats generation integration testing', () => {
         })
 
         it('Basic generation', async () => {
-            const config = require('../fixture/postgres/osm.json')
+            const config: any = postgresOsm
             const formattedOutput = await typescriptOfSchema(
                 db,
                 config.tables,
@@ -23,7 +28,7 @@ describe('schemats generation integration testing', () => {
         })
 
         it('Camelcase generation', async () => {
-            const config = require('../fixture/postgres/osm-camelcase.json')
+          const config = postgresOsmCamelcase
             const formattedOutput = await typescriptOfSchema(
                 db,
                 config.tables,
@@ -44,7 +49,7 @@ describe('schemats generation integration testing', () => {
 
         it('Basic generation', async () => {
             await loadSchema(db, './test/fixture/mysql/osm.sql')
-            const config = require('../fixture/mysql/osm.json')
+            const config: any = mysqlOsm
             const formattedOutput = await typescriptOfSchema(
                 db,
                 config.tables,
@@ -56,7 +61,7 @@ describe('schemats generation integration testing', () => {
 
         it('Enum conflict in columns', async () => {
             await loadSchema(db, './test/fixture/mysql/conflict.sql')
-            const config = require('../fixture/mysql/conflict.json')
+            const config: any = mysqlConflict
             await expect(typescriptOfSchema(
                 db,
                 config.tables,

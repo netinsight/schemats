@@ -15,8 +15,8 @@ import { processString, Options as ITFOptions } from 'typescript-formatter'
 import { version as pkgVersion } from '../package.json'
 
 function getTime () {
-    let padTime = (value: number) => `0${value}`.slice(-2)
-    let time = new Date()
+    const padTime = (value: number) => `0${value}`.slice(-2)
+    const time = new Date()
     const yyyy = time.getFullYear()
     const MM = padTime(time.getMonth() + 1)
     const dd = padTime(time.getDate())
@@ -32,7 +32,7 @@ function buildHeader (
     schema: string | null,
     options: OptionValues
 ): string {
-    let commands = [
+    const commands = [
         'schemats',
         'generate',
         '-c',
@@ -71,7 +71,7 @@ export async function typescriptOfTable (
     }
 
     let interfaces = ''
-    let tableTypes = await db.getTableTypes(table, schema, options)
+    const tableTypes = await db.getTableTypes(table, schema, options)
     const { fields, validator } = generateTableTypes(
         table,
         tableTypes,
@@ -116,7 +116,7 @@ export async function typescriptOfSchema (
         optionsObject
     )
     const tableResultPromises = tables.map((table) =>
-        typescriptOfTable(db, table, schema as string, optionsObject)
+        typescriptOfTable(db, table, schema!, optionsObject)
     )
     const tableResults = await Promise.all(tableResultPromises)
     const interfaces = tableResults.map((r) => r.interfaces).join('')

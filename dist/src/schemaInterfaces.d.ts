@@ -4,12 +4,10 @@ export interface ColumnDefinition {
     nullable: boolean;
     tsType?: string;
 }
-export interface TableDefinition {
-    [columnName: string]: ColumnDefinition;
-}
+export type TableDefinition = Record<string, ColumnDefinition>;
 export interface Database {
     connectionString: string;
-    query(queryString: string): Promise<Object[]>;
+    query(queryString: string): Promise<Record<string, any>[]>;
     getDefaultSchema(): string;
     getEnumTypes(schema?: string): any;
     getTableDefinition(tableName: string, tableSchema: string): Promise<TableDefinition>;
