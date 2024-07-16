@@ -133,6 +133,7 @@ interface DataTypes {
     Object: Object
     "Array<string>": string[]
     "Array<bigint>": bigint[]
+    "Array<number>": number[]
 }
 
 type DataType = DataTypes[keyof DataTypes]
@@ -155,7 +156,8 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
         Object: (v: any) => typeof v == 'object' && !!v,
         boolean: (v: any) => typeof v == 'boolean',
         "Array<string>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'string'),
-        "Array<bigint>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'bigint')
+        "Array<bigint>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'bigint'),
+        "Array<number>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'number')
     }
 
     const parsers: {
@@ -188,6 +190,13 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
                 throw new Error('String not parsable as bigint array')
             }
             return json as bigint[]
+        },
+        "Array<number>": (v: string) => {
+            const json = JSON.parse(v)
+            if (!Array.isArray(json) || json.some(item => typeof item != 'number')) {
+                throw new Error('String not parsable as number array')
+            }
+            return json as number[]
         }
     }
 
