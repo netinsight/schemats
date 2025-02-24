@@ -32,26 +32,4 @@ describe('schemats cli tool integration testing', () => {
             }))
         })
     })
-
-    describe('schemats generate mysql', () => {
-        const conn = process.env.MYSQL_URL!
-        beforeAll(async () => {
-            expect(conn).toMatch(/^mysql:\/\/.+/)
-            const db = getDatabase(`${process.env.MYSQL_URL}?multipleStatements=true`)
-            await loadSchema(db, './test/fixture/mysql/initCleanup.sql')
-        })
-
-        it('should run without error', () => {
-            const res = spawnSync('npx', [
-                '.', 'generate',
-                '-c', conn,
-                '-o', '/tmp/schemats_cli_mysql.ts'
-            ], { encoding: 'utf-8'})
-            expect(res).toEqual(expect.objectContaining({
-                status: 0,
-                stdout: '',
-                stderr: '',
-            }))
-        })
-    })
 })

@@ -1,279 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`schemats generation integration testing mysql Basic generation 1`] = `
-"
-export namespace usersFields {
-    export type char_col = string;
-    export type nullable_char_col = string | null;
-    export type text_col = string;
-    export type nullable_text_col = string | null;
-    export type tinytext_col = string;
-    export type nullable_tinytext_col = string | null;
-    export type mediumtext_col = string;
-    export type nullable_mediumtext_col = string | null;
-    export type longtext_col = string;
-    export type nullable_longtext_col = string | null;
-    export type time_col = string;
-    export type nullable_time_col = string | null;
-    export type geometry_col = string;
-    export type nullable_geometry_col = string | null;
-    export type integer_col = number;
-    export type nullable_integer_col = number | null;
-    export type int_col = number;
-    export type nullable_int_col = number | null;
-    export type smallint_col = number;
-    export type nullable_smallint_col = number | null;
-    export type mediumint_col = number;
-    export type nullable_mediumint_col = number | null;
-    export type bigint_col = number;
-    export type nullable_bigint_col = number | null;
-    export type double_col = number;
-    export type nullable_double_col = number | null;
-    export type decimal_col = number;
-    export type nullable_decimal_col = number | null;
-    export type numeric_col = number;
-    export type nullable_numeric_col = number | null;
-    export type float_col = number;
-    export type nullable_float_col = number | null;
-    export type year_col = number;
-    export type nullable_year_col = number | null;
-    export type tinyint_col = boolean;
-    export type nullable_tinyint_col = boolean | null;
-    export type date_col = Date;
-    export type nullable_date_col = Date | null;
-    export type datetime_col = Date;
-    export type nullable_datetime_col = Date | null;
-    export type timestamp_col = Date;
-
-}
-
-export interface users {
-    char_col: usersFields.char_col;
-    nullable_char_col: usersFields.nullable_char_col;
-    text_col: usersFields.text_col;
-    nullable_text_col: usersFields.nullable_text_col;
-    tinytext_col: usersFields.tinytext_col;
-    nullable_tinytext_col: usersFields.nullable_tinytext_col;
-    mediumtext_col: usersFields.mediumtext_col;
-    nullable_mediumtext_col: usersFields.nullable_mediumtext_col;
-    longtext_col: usersFields.longtext_col;
-    nullable_longtext_col: usersFields.nullable_longtext_col;
-    time_col: usersFields.time_col;
-    nullable_time_col: usersFields.nullable_time_col;
-    geometry_col: usersFields.geometry_col;
-    nullable_geometry_col: usersFields.nullable_geometry_col;
-    integer_col: usersFields.integer_col;
-    nullable_integer_col: usersFields.nullable_integer_col;
-    int_col: usersFields.int_col;
-    nullable_int_col: usersFields.nullable_int_col;
-    smallint_col: usersFields.smallint_col;
-    nullable_smallint_col: usersFields.nullable_smallint_col;
-    mediumint_col: usersFields.mediumint_col;
-    nullable_mediumint_col: usersFields.nullable_mediumint_col;
-    bigint_col: usersFields.bigint_col;
-    nullable_bigint_col: usersFields.nullable_bigint_col;
-    double_col: usersFields.double_col;
-    nullable_double_col: usersFields.nullable_double_col;
-    decimal_col: usersFields.decimal_col;
-    nullable_decimal_col: usersFields.nullable_decimal_col;
-    numeric_col: usersFields.numeric_col;
-    nullable_numeric_col: usersFields.nullable_numeric_col;
-    float_col: usersFields.float_col;
-    nullable_float_col: usersFields.nullable_float_col;
-    year_col: usersFields.year_col;
-    nullable_year_col: usersFields.nullable_year_col;
-    tinyint_col: usersFields.tinyint_col;
-    nullable_tinyint_col: usersFields.nullable_tinyint_col;
-    date_col: usersFields.date_col;
-    nullable_date_col: usersFields.nullable_date_col;
-    datetime_col: usersFields.datetime_col;
-    nullable_datetime_col: usersFields.nullable_datetime_col;
-    timestamp_col: usersFields.timestamp_col;
-
-}
-
-export namespace user_enumsFields {
-
-}
-
-export interface user_enums {
-
-}
-
-export namespace packageFields {
-    export type number_ = number;
-    export type string_ = string;
-
-}
-
-export interface package_ {
-    number: packageFields.number_;
-    string: packageFields.string_;
-
-}
-
-interface DataTypes {
-    string: string
-    boolean: boolean
-    Date: Date
-    bigint: bigint
-    number: number
-    Object: Object
-    "Array<string>": string[]
-    "Array<bigint>": bigint[]
-    "Array<number>": number[]
-    "Array<number> | null": number[] | null
-}
-
-type DataType = DataTypes[keyof DataTypes]
-
-export interface ColumnSpec<T extends DataType> {
-    validate: (v: any) => boolean
-    parse: (v: string) => T
-    nullable: boolean
-    type: keyof DataTypes
-}
-
-function validate<K extends keyof DataTypes>(type: K, nullable: boolean): ColumnSpec<DataTypes[K]> {
-    const validators: {
-        [t in keyof DataTypes]: (v: any) => boolean
-    } = {
-        string: (v: any) => typeof v == 'string',
-        number: (v: any) => typeof v == 'number',
-        bigint: (v: any) => typeof v == 'bigint',
-        Date: (v: any) => Object.prototype.toString.call(v) == '[object Date]' && !isNaN(v),
-        Object: (v: any) => typeof v == 'object' && !!v,
-        boolean: (v: any) => typeof v == 'boolean',
-        "Array<string>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'string'),
-        "Array<bigint>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'bigint'),
-        "Array<number>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'number')
-        "Array<number> | null": (v: any) => v === null || (Array.isArray(v) && v.every(item => typeof item == 'number'))
-    }
-
-    const parsers: {
-        [t in keyof DataTypes]: (v: string) => DataTypes[t]
-    } = {
-        string: (v: string) => v,
-        number: (v: string) => parseFloat(v),
-        bigint: (v: string) => BigInt(v),
-        Date: (v: string) => new Date(v),
-        Object: (v: string) => JSON.parse(v),
-        boolean: (v: string) => {
-            if (v == 'true') {
-                return true
-            }
-            if (v == 'false') {
-                return false
-            }
-            throw new Error('Could not parse ' + v + ' as boolean')
-        },
-        "Array<string>": (v: string) => {
-            const json = JSON.parse(v)
-            if (!Array.isArray(json) || json.some(item => typeof item != 'string')) {
-                throw new Error('String not parsable as string array')
-            }
-            return json as string[]
-        },
-        "Array<bigint>": (v: string) => {
-            const json = JSON.parse(v)
-            if (!Array.isArray(json) || json.some(item => typeof item != 'bigint')) {
-                throw new Error('String not parsable as bigint array')
-            }
-            return json as bigint[]
-        },
-        "Array<number>": (v: string) => {
-            const json = JSON.parse(v)
-            if (!Array.isArray(json) || json.some(item => typeof item != 'number')) {
-                throw new Error('String not parsable as number array')
-            }
-            return json as number[]
-        }
-        "Array<number> | null": (v: string) => {
-            if (v === null) {
-                return null
-            }
-            const json = JSON.parse(v)
-            if (!Array.isArray(json) || json.some(item => typeof item != 'number')) {
-                throw new Error('String not parsable as number array')
-            }
-            return json as number[]
-        }
-    }
-
-    if (!(type in validators)) {
-        throw new Error('Unsupported type: ' + type)
-    }
-
-    const validateFn = validators[type]
-
-    const validate = (value: any) => {
-        if (value === null) {
-            return nullable
-        }
-
-        if (!validateFn) {
-            return false
-        }
-        return validateFn(value)
-    }
-
-    const parse = parsers[type]
-    return { validate, nullable, type, parse: parse as ColumnSpec<DataTypes[K]>['parse'] }
-}
-export const Validator = {
-    users: {
-        char_col: validate('string', false),
-        nullable_char_col: validate('string', true),
-        text_col: validate('string', false),
-        nullable_text_col: validate('string', true),
-        tinytext_col: validate('string', false),
-        nullable_tinytext_col: validate('string', true),
-        mediumtext_col: validate('string', false),
-        nullable_mediumtext_col: validate('string', true),
-        longtext_col: validate('string', false),
-        nullable_longtext_col: validate('string', true),
-        time_col: validate('string', false),
-        nullable_time_col: validate('string', true),
-        geometry_col: validate('string', false),
-        nullable_geometry_col: validate('string', true),
-        integer_col: validate('number', false),
-        nullable_integer_col: validate('number', true),
-        int_col: validate('number', false),
-        nullable_int_col: validate('number', true),
-        smallint_col: validate('number', false),
-        nullable_smallint_col: validate('number', true),
-        mediumint_col: validate('number', false),
-        nullable_mediumint_col: validate('number', true),
-        bigint_col: validate('number', false),
-        nullable_bigint_col: validate('number', true),
-        double_col: validate('number', false),
-        nullable_double_col: validate('number', true),
-        decimal_col: validate('number', false),
-        nullable_decimal_col: validate('number', true),
-        numeric_col: validate('number', false),
-        nullable_numeric_col: validate('number', true),
-        float_col: validate('number', false),
-        nullable_float_col: validate('number', true),
-        year_col: validate('number', false),
-        nullable_year_col: validate('number', true),
-        tinyint_col: validate('boolean', false),
-        nullable_tinyint_col: validate('boolean', true),
-        date_col: validate('Date', false),
-        nullable_date_col: validate('Date', true),
-        datetime_col: validate('Date', false),
-        nullable_datetime_col: validate('Date', true),
-        timestamp_col: validate('Date', false),
-    },
-    user_enums: {
-    },
-    package: {
-        number: validate('number', false),
-        string: validate('string', false),
-    },
-}
-"
-`;
-
 exports[`schemats generation integration testing postgres Basic generation 1`] = `
 "export type format_enum = 'html' | 'markdown' | 'text';
 export type user_status_enum = 'active' | 'confirmed' | 'deleted' | 'pending' | 'suspended';
@@ -424,7 +150,7 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
         boolean: (v: any) => typeof v == 'boolean',
         "Array<string>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'string'),
         "Array<bigint>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'bigint'),
-        "Array<number>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'number')
+        "Array<number>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'number'),
         "Array<number> | null": (v: any) => v === null || (Array.isArray(v) && v.every(item => typeof item == 'number'))
     }
 
@@ -465,7 +191,7 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
                 throw new Error('String not parsable as number array')
             }
             return json as number[]
-        }
+        },
         "Array<number> | null": (v: string) => {
             if (v === null) {
                 return null
@@ -707,7 +433,7 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
         boolean: (v: any) => typeof v == 'boolean',
         "Array<string>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'string'),
         "Array<bigint>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'bigint'),
-        "Array<number>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'number')
+        "Array<number>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'number'),
         "Array<number> | null": (v: any) => v === null || (Array.isArray(v) && v.every(item => typeof item == 'number'))
     }
 
@@ -748,7 +474,7 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
                 throw new Error('String not parsable as number array')
             }
             return json as number[]
-        }
+        },
         "Array<number> | null": (v: string) => {
             if (v === null) {
                 return null

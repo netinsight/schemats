@@ -3,7 +3,7 @@
 [![GitHub tag](https://img.shields.io/github/tag/netinsight/schemats.svg)](https://github.com/netinsight/schemats)
 [![test](https://github.com/netinsight/schemats/actions/workflows/test.yml/badge.svg)](https://github.com/netinsight/schemats/actions/workflows/test.yml)
 
-Using Schemats, you can generate TypeScript interface definitions from (Postgres, MySQL) SQL database schema automatically.
+Using Schemats, you can generate TypeScript interface definitions from (Postgres) SQL database schema automatically.
 
 Start with a database schema:
 
@@ -47,7 +47,6 @@ npm install -g schemats
 
 ```sh
 schemats generate -c postgres://postgres@localhost/osm -t users -o osm.ts
-schemats generate -c mysql://mysql@localhost/osm -t users -o osm.ts
 ```
 
 
@@ -57,18 +56,15 @@ The above commands will generate typescript interfaces `osm.ts` for `users` tabl
 
 To generate all type definitions for all the tables within the schema 'public':
 
-*Note: MySQL does not have a default public schema, but should it have a schema named public, this will still work.*
 
 ```sh
 schemats generate -c postgres://postgres@localhost/osm -s public -o osm.ts
-schemats generate -c mysql://mysql@localhost/osm -s public -o osm.ts
 ```
 
 If neither the table parameter nor the schema parameter is provided, all tables in schema 'public' will be generated, so the command above is equivalent to:
 
 ```
 schemats generate -c postgres://postgres@localhost/osm -o osm.ts
-schemats generate -c mysql://mysql@localhost/osm -o osm.ts
 ```
 
 ### Using schemats.json config file
