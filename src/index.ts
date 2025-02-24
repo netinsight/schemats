@@ -158,7 +158,7 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
         boolean: (v: any) => typeof v == 'boolean',
         "Array<string>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'string'),
         "Array<bigint>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'bigint'),
-        "Array<number>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'number')
+        "Array<number>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'number'),
         "Array<number> | null": (v: any) => v === null || (Array.isArray(v) && v.every(item => typeof item == 'number'))
     }
 
@@ -199,7 +199,7 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
                 throw new Error('String not parsable as number array')
             }
             return json as number[]
-        }
+        },
         "Array<number> | null": (v: string) => {
             if (v === null) {
                 return null
