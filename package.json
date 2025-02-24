@@ -1,6 +1,6 @@
 {
   "name": "schemats",
-  "version": "3.0.12",
+  "version": "3.0.13",
   "description": "Generate typescript interface definitions from (postgres) SQL database schema",
   "keywords": [
     "postgres",
@@ -15,7 +15,7 @@
     "build": "tsc",
     "test": "npm run test:unit",
     "test:unit": "jest --testMatch '<rootDir>/test/unit/**/*.test.ts'",
-    "test:integration": "POSTGRES_URL=postgres://user:password@127.0.0.1:5432/test MYSQL_URL=mysql://user:password@127.0.0.1:3306/test jest --testMatch '<rootDir>/test/integration/**/*.test.ts'",
+    "test:integration": "POSTGRES_URL=postgres://user:password@127.0.0.1:5432/test jest --testMatch '<rootDir>/test/integration/**/*.test.ts'",
     "prepublish": "npm run build",
     "coverage": "npm run test:unit -- --coverage"
   },
@@ -39,7 +39,6 @@
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.17.0",
-    "@types/mysql": "0.0.34",
     "@types/node": "^20.11.28",
     "@types/yargs": "^6.6.0",
     "@typescript-eslint/eslint-plugin": "^7.3.0",
@@ -51,7 +50,6 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "mysql": "^2.18.1",
     "pg-promise": "^10.15.4",
     "typescript": "^4.9.5",
     "typescript-formatter": "^7.2.2",
