@@ -108,7 +108,8 @@ function validatorFromColumnDefinition (definition: ColumnDefinition): string {
             'Array<string>',
             'Array<bigint>',
             'Array<number>',
-            'Array<number>|null'
+            'Array<number>|null',
+            'Array<Object>'
         ].includes(definition.tsType!)
     ) {
         throw new Error(`Unsupported ts type: ${JSON.stringify(definition)}`)

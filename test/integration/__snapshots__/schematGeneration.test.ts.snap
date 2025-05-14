@@ -57,6 +57,7 @@ export namespace usersFields {
     export type json_col = Object | null;
     export type date_col = Date | null;
     export type name_type_col = string | null;
+    export type jsonb_array_col = Array<Object> | null;
 
 }
 
@@ -113,6 +114,7 @@ export interface users {
     json_col: usersFields.json_col;
     date_col: usersFields.date_col;
     name_type_col: usersFields.name_type_col;
+    jsonb_array_col: usersFields.jsonb_array_col;
 
 }
 
@@ -127,6 +129,7 @@ interface DataTypes {
     "Array<bigint>": bigint[]
     "Array<number>": number[]
     "Array<number> | null": number[] | null
+    "Array<Object>": Object[] | null
 }
 
 type DataType = DataTypes[keyof DataTypes]
@@ -151,7 +154,8 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
         "Array<string>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'string'),
         "Array<bigint>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'bigint'),
         "Array<number>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'number'),
-        "Array<number> | null": (v: any) => v === null || (Array.isArray(v) && v.every(item => typeof item == 'number'))
+        "Array<number> | null": (v: any) => v === null || (Array.isArray(v) && v.every(item => typeof item == 'number')),
+        "Array<Object>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'object' && !!item),
     }
 
     const parsers: {
@@ -201,6 +205,13 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
                 throw new Error('String not parsable as number array')
             }
             return json as number[]
+        },
+        "Array<Object>": (v: string) => {
+            const json = JSON.parse(v)
+            if (!Array.isArray(json) || json.some(item => typeof item != 'object')) {
+                throw new Error('String not parsable as object array')
+            }
+            return json as Object[]
         }
     }
 
@@ -278,6 +289,7 @@ export const Validator = {
         json_col: validate('Object', true),
         date_col: validate('Date', true),
         name_type_col: validate('string', true),
+        jsonb_array_col: validate('Array<Object>', true),
     },
 }
 "
@@ -340,6 +352,7 @@ export namespace UsersFields {
     export type jsonCol = Object | null;
     export type dateCol = Date | null;
     export type nameTypeCol = string | null;
+    export type jsonbArrayCol = Array<Object> | null;
 
 }
 
@@ -396,6 +409,7 @@ export interface Users {
     jsonCol: UsersFields.jsonCol;
     dateCol: UsersFields.dateCol;
     nameTypeCol: UsersFields.nameTypeCol;
+    jsonbArrayCol: UsersFields.jsonbArrayCol;
 
 }
 
@@ -410,6 +424,7 @@ interface DataTypes {
     "Array<bigint>": bigint[]
     "Array<number>": number[]
     "Array<number> | null": number[] | null
+    "Array<Object>": Object[] | null
 }
 
 type DataType = DataTypes[keyof DataTypes]
@@ -434,7 +449,8 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
         "Array<string>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'string'),
         "Array<bigint>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'bigint'),
         "Array<number>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'number'),
-        "Array<number> | null": (v: any) => v === null || (Array.isArray(v) && v.every(item => typeof item == 'number'))
+        "Array<number> | null": (v: any) => v === null || (Array.isArray(v) && v.every(item => typeof item == 'number')),
+        "Array<Object>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'object' && !!item),
     }
 
     const parsers: {
@@ -484,6 +500,13 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
                 throw new Error('String not parsable as number array')
             }
             return json as number[]
+        },
+        "Array<Object>": (v: string) => {
+            const json = JSON.parse(v)
+            if (!Array.isArray(json) || json.some(item => typeof item != 'object')) {
+                throw new Error('String not parsable as object array')
+            }
+            return json as Object[]
         }
     }
 
@@ -561,6 +584,7 @@ export const Validator = {
         json_col: validate('Object', true),
         date_col: validate('Date', true),
         name_type_col: validate('string', true),
+        jsonb_array_col: validate('Array<Object>', true),
     },
 }
 "

@@ -103,6 +103,7 @@ interface DataTypes {
     "Array<bigint>": bigint[]
     "Array<number>": number[]
     "Array<number> | null": number[] | null
+    "Array<Object>": Object[] | null
 }
 
 type DataType = DataTypes[keyof DataTypes]
@@ -127,7 +128,8 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
         "Array<string>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'string'),
         "Array<bigint>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'bigint'),
         "Array<number>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'number'),
-        "Array<number> | null": (v: any) => v === null || (Array.isArray(v) && v.every(item => typeof item == 'number'))
+        "Array<number> | null": (v: any) => v === null || (Array.isArray(v) && v.every(item => typeof item == 'number')),
+        "Array<Object>": (v: any) => Array.isArray(v) && v.every(item => typeof item == 'object' && !!item),
     }
 
     const parsers: {
@@ -177,6 +179,13 @@ function validate<K extends keyof DataTypes>(type: K, nullable: boolean): Column
                 throw new Error('String not parsable as number array')
             }
             return json as number[]
+        },
+        "Array<Object>": (v: string) => {
+            const json = JSON.parse(v)
+            if (!Array.isArray(json) || json.some(item => typeof item != 'object')) {
+                throw new Error('String not parsable as object array')
+            }
+            return json as Object[]
         }
     }
 

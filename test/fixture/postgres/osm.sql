@@ -74,8 +74,8 @@ CREATE TABLE users (
     json_col json,
     date_col date,
     -- TODO: unspported_path_type path,
-    name_type_col name
+    name_type_col name,
     -- TODO: json_array_col json[],
-    -- TODO: jsonb_array_col jsonb[],
+    jsonb_array_col jsonb[]
     -- TODO: timestamptz_array_col timestamptz[]
 );
