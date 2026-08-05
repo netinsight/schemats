@@ -9,6 +9,7 @@ exports.generateEnumType = generateEnumType;
 exports.generateTableTypes = generateTableTypes;
 function nameIsReservedKeyword(name) {
     const reservedKeywords = ['string', 'number', 'package', 'object'];
+    // eslint-disable-next-line @typescript-eslint/prefer-includes
     return reservedKeywords.indexOf(name) !== -1;
 }
 function normalizeName(name) {

@@ -101,6 +101,7 @@ export async function typescriptOfSchema (
         db = getDatabase(db)
     }
 
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     if (!schema) {
         schema = db.getDefaultSchema()
     }

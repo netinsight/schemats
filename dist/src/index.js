@@ -79,6 +79,7 @@ async function typescriptOfSchema(db, tables = [], schema = null, options = {}) 
     if (typeof db === 'string') {
         db = (0, schema_1.getDatabase)(db);
     }
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     if (!schema) {
         schema = db.getDefaultSchema();
     }
