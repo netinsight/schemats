@@ -13,6 +13,7 @@ const DEFAULT_OPTIONS = {
     camelCase: false
 };
 class Options {
+    options;
     constructor(options = {}) {
         this.options = { ...DEFAULT_OPTIONS, ...options };
     }
