@@ -11,7 +11,9 @@ import {
 } from './typescript'
 import { getDatabase, Database } from './schema'
 import Options, { OptionValues } from './options'
-import { processString, Options as ITFOptions } from 'typescript-formatter'
+import { format } from 'prettier/standalone'
+import * as prettierTypescript from 'prettier/plugins/typescript'
+import * as prettierEstree from 'prettier/plugins/estree'
 import { version as pkgVersion } from '../package.json'
 
 function getTime () {
@@ -257,26 +259,15 @@ export const Validator = {`
     output += interfaces
     output += validatorStrings.join('\n')
 
-    const formatterOption: ITFOptions = {
-        replace: false,
-        verify: false,
-        tsconfig: true,
-        tslint: false,
-        editorconfig: true,
-        tsfmt: true,
-        vscode: false,
-        tsconfigFile: null,
-        tslintFile: null,
-        vscodeFile: null,
-        tsfmtFile: null
-    }
-
-    const processedResult = await processString(
-        'schema.ts',
-        output,
-        formatterOption
-    )
-    return processedResult.dest
+    return format(output, {
+        parser: 'typescript',
+        plugins: [prettierTypescript, prettierEstree],
+        tabWidth: 4,
+        printWidth: 120,
+        singleQuote: true,
+        trailingComma: 'all',
+        semi: false
+    })
 }
 
 export { Database, getDatabase } from './schema'

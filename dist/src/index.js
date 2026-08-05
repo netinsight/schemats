@@ -3,6 +3,39 @@
  * Schemats takes sql database schema and creates corresponding typescript definitions
  * Created by xiamx on 2016-08-10.
  */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -15,7 +48,9 @@ const typescript_1 = require("./typescript");
 const schema_1 = require("./schema");
 const options_1 = __importDefault(require("./options"));
 exports.Options = options_1.default;
-const typescript_formatter_1 = require("typescript-formatter");
+const standalone_1 = require("prettier/standalone");
+const prettierTypescript = __importStar(require("prettier/plugins/typescript"));
+const prettierEstree = __importStar(require("prettier/plugins/estree"));
 const package_json_1 = require("../package.json");
 function getTime() {
     const padTime = (value) => `0${value}`.slice(-2);
@@ -224,21 +259,15 @@ export const Validator = {`
     output += enumTypes;
     output += interfaces;
     output += validatorStrings.join('\n');
-    const formatterOption = {
-        replace: false,
-        verify: false,
-        tsconfig: true,
-        tslint: false,
-        editorconfig: true,
-        tsfmt: true,
-        vscode: false,
-        tsconfigFile: null,
-        tslintFile: null,
-        vscodeFile: null,
-        tsfmtFile: null
-    };
-    const processedResult = await (0, typescript_formatter_1.processString)('schema.ts', output, formatterOption);
-    return processedResult.dest;
+    return (0, standalone_1.format)(output, {
+        parser: 'typescript',
+        plugins: [prettierTypescript, prettierEstree],
+        tabWidth: 4,
+        printWidth: 120,
+        singleQuote: true,
+        trailingComma: 'all',
+        semi: false
+    });
 }
 var schema_2 = require("./schema");
 Object.defineProperty(exports, "getDatabase", { enumerable: true, get: function () { return schema_2.getDatabase; } });
