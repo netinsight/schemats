@@ -11,7 +11,7 @@ import {
 } from './typescript'
 import { getDatabase, Database } from './schema'
 import Options, { OptionValues } from './options'
-import { processString, Options as ITFOptions } from 'typescript-formatter'
+import { formatTypescript } from './formatter'
 import { version as pkgVersion } from '../package.json'
 
 function getTime () {
@@ -256,26 +256,7 @@ export const Validator = {`
     output += interfaces
     output += validatorStrings.join('\n')
 
-    const formatterOption: ITFOptions = {
-        replace: false,
-        verify: false,
-        tsconfig: true,
-        tslint: false,
-        editorconfig: true,
-        tsfmt: true,
-        vscode: false,
-        tsconfigFile: null,
-        tslintFile: null,
-        vscodeFile: null,
-        tsfmtFile: null
-    }
-
-    const processedResult = await processString(
-        'schema.ts',
-        output,
-        formatterOption
-    )
-    return processedResult.dest
+    return formatTypescript('schema.ts', output)
 }
 
 export { Database, getDatabase } from './schema'

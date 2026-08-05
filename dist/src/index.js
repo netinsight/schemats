@@ -12,7 +12,7 @@ const typescript_1 = require("./typescript");
 const schema_1 = require("./schema");
 const options_1 = __importDefault(require("./options"));
 exports.Options = options_1.default;
-const typescript_formatter_1 = require("typescript-formatter");
+const formatter_1 = require("./formatter");
 const package_json_1 = require("../package.json");
 function getTime() {
     const padTime = (value) => `0${value}`.slice(-2);
@@ -222,21 +222,7 @@ export const Validator = {`
     output += enumTypes;
     output += interfaces;
     output += validatorStrings.join('\n');
-    const formatterOption = {
-        replace: false,
-        verify: false,
-        tsconfig: true,
-        tslint: false,
-        editorconfig: true,
-        tsfmt: true,
-        vscode: false,
-        tsconfigFile: null,
-        tslintFile: null,
-        vscodeFile: null,
-        tsfmtFile: null
-    };
-    const processedResult = await (0, typescript_formatter_1.processString)('schema.ts', output, formatterOption);
-    return processedResult.dest;
+    return (0, formatter_1.formatTypescript)('schema.ts', output);
 }
 exports.typescriptOfSchema = typescriptOfSchema;
 var schema_2 = require("./schema");
