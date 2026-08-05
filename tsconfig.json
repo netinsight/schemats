@@ -9,7 +9,8 @@
         "declaration": true,
         "strict": true,
         "sourceMap": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "types": ["node"]
     },
     "include": ["./src/**/*.ts", "./bin/**/*.ts"],
     "exclude": ["node_modules"]
