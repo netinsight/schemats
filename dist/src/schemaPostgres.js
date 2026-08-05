@@ -5,8 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostgresDatabase = void 0;
 const pg_promise_1 = __importDefault(require("pg-promise"));
-const lodash_1 = require("lodash");
-const lodash_2 = require("lodash");
 const pgp = (0, pg_promise_1.default)();
 class PostgresDatabase {
     constructor(connectionString) {
@@ -14,7 +12,7 @@ class PostgresDatabase {
         this.db = pgp(connectionString);
     }
     static mapTableDefinitionToType(tableDefinition, customTypes, options) {
-        return (0, lodash_1.mapValues)(tableDefinition, column => {
+        return Object.fromEntries(Object.entries(tableDefinition).map(([columnName, column]) => {
             switch (column.udtName) {
                 case 'bpchar':
                 case 'char':
@@ -29,7 +27,7 @@ class PostgresDatabase {
                 case 'interval':
                 case 'name':
                     column.tsType = 'string';
-                    return column;
+                    return [columnName, column];
                 case 'int2':
                 case 'int4':
                 case 'float4':
@@ -38,22 +36,22 @@ class PostgresDatabase {
                 case 'money':
                 case 'oid':
                     column.tsType = 'number';
-                    return column;
+                    return [columnName, column];
                 case 'int8':
                     column.tsType = 'bigint';
-                    return column;
+                    return [columnName, column];
                 case 'bool':
                     column.tsType = 'boolean';
-                    return column;
+                    return [columnName, column];
                 case 'json':
                 case 'jsonb':
                     column.tsType = 'Object';
-                    return column;
+                    return [columnName, column];
                 case 'date':
                 case 'timestamp':
                 case 'timestamptz':
                     column.tsType = 'Date';
-                    return column;
+                    return [columnName, column];
                 case '_int2':
                 case '_int4':
                 case '_float4':
@@ -61,40 +59,40 @@ class PostgresDatabase {
                 case '_numeric':
                 case '_money':
                     column.tsType = 'Array<number>';
-                    return column;
+                    return [columnName, column];
                 case '_int8':
                     column.tsType = 'Array<bigint>';
-                    return column;
+                    return [columnName, column];
                 case '_bool':
                     column.tsType = 'Array<boolean>';
-                    return column;
+                    return [columnName, column];
                 case '_varchar':
                 case '_text':
                 case '_citext':
                 case '_uuid':
                 case '_bytea':
                     column.tsType = 'Array<string>';
-                    return column;
+                    return [columnName, column];
                 case '_json':
                 case '_jsonb':
                     column.tsType = 'Array<Object>';
-                    return column;
+                    return [columnName, column];
                 case '_timestamptz':
                     column.tsType = 'Array<Date>';
-                    return column;
+                    return [columnName, column];
                 default:
                     // eslint-disable-next-line @typescript-eslint/prefer-includes
                     if (customTypes.indexOf(column.udtName) !== -1) {
                         column.tsType = options.transformTypeName(column.udtName);
-                        return column;
+                        return [columnName, column];
                     }
                     else {
                         console.log(`Type [${column.udtName} has been mapped to [any] because no specific type has been found.`);
                         column.tsType = 'any';
-                        return column;
+                        return [columnName, column];
                     }
             }
-        });
+        }));
     }
     query(queryString) {
         return this.db.query(queryString);
@@ -130,7 +128,7 @@ class PostgresDatabase {
     }
     async getTableTypes(tableName, tableSchema, options) {
         const enumTypes = await this.getEnumTypes();
-        const customTypes = (0, lodash_2.keys)(enumTypes);
+        const customTypes = Object.keys(enumTypes);
         return PostgresDatabase.mapTableDefinitionToType(await this.getTableDefinition(tableName, tableSchema), customTypes, options);
     }
     async getSchemaTables(schemaName) {

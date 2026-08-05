@@ -1,6 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const lodash_1 = require("lodash");
+function camelCase(value) {
+    return value
+        .replace(/[^a-zA-Z0-9]+(.)/g, (_, char) => char.toUpperCase())
+        .replace(/^[A-Z]/, char => char.toLowerCase());
+}
+function upperFirst(value) {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+}
 const DEFAULT_OPTIONS = {
     writeHeader: true,
     camelCase: false
@@ -10,10 +17,10 @@ class Options {
         this.options = { ...DEFAULT_OPTIONS, ...options };
     }
     transformTypeName(typename) {
-        return this.options.camelCase ? (0, lodash_1.upperFirst)((0, lodash_1.camelCase)(typename)) : typename;
+        return this.options.camelCase ? upperFirst(camelCase(typename)) : typename;
     }
     transformColumnName(columnName) {
-        return this.options.camelCase ? (0, lodash_1.camelCase)(columnName) : columnName;
+        return this.options.camelCase ? camelCase(columnName) : columnName;
     }
 }
 exports.default = Options;
