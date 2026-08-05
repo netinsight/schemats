@@ -7,6 +7,8 @@ exports.PostgresDatabase = void 0;
 const pg_promise_1 = __importDefault(require("pg-promise"));
 const pgp = (0, pg_promise_1.default)();
 class PostgresDatabase {
+    connectionString;
+    db;
     constructor(connectionString) {
         this.connectionString = connectionString;
         this.db = pgp(connectionString);
