@@ -8,15 +8,6 @@ import * as yargs from 'yargs'
 import * as fs from 'fs'
 import { typescriptOfSchema } from '../src/index'
 
-interface SchematsConfig {
-    conn: string,
-    table: string[] | string,
-    schema: string,
-    output: string,
-    camelCase: boolean,
-    noHeader: boolean,
-}
-
 const argv = yargs
     .usage('Usage: $0 <command> [options]')
     .global('config')
@@ -26,36 +17,21 @@ const argv = yargs
     .command('generate', 'generate type definition')
     .demand(1)
     .example('$0 generate -c postgres://username:password@localhost/db -t table1 -t table2 -s schema -o interface_output.ts', 'generate typescript interfaces from schema')
-    .demand('c')
-    .alias('c', 'conn')
-    .nargs('c', 1)
-    .describe('c', 'database connection string')
-    .alias('t', 'table')
-    .nargs('t', 1)
-    .describe('t', 'table name')
-    .alias('s', 'schema')
-    .nargs('s', 1)
-    .describe('s', 'schema name')
-    .alias('C', 'camelCase')
-    .describe('C', 'Camel-case columns')
-    .describe('noHeader', 'Do not write header')
-    .demand('o')
-    .nargs('o', 1)
-    .alias('o', 'output')
-    .describe('o', 'output file name')
+    .options({
+        conn: { alias: 'c', demandOption: true, nargs: 1, describe: 'database connection string', type: 'string' },
+        table: { alias: 't', nargs: 1, describe: 'table name', type: 'string', array: true },
+        schema: { alias: 's', nargs: 1, describe: 'schema name', type: 'string' },
+        camelCase: { alias: 'C', describe: 'Camel-case columns', type: 'boolean' },
+        noHeader: { describe: 'Do not write header', type: 'boolean' },
+        output: { alias: 'o', demandOption: true, nargs: 1, describe: 'output file name', type: 'string' }
+    })
     .help('h')
     .alias('h', 'help')
-    .argv as unknown as SchematsConfig;
+    .parseSync();
 
 (async () => {
     try {
-        if (!Array.isArray(argv.table)) {
-            if (!argv.table) {
-                argv.table = []
-            } else {
-                argv.table = [argv.table]
-            }
-        }
+        argv.table ??= []
 
         const formattedOutput = await typescriptOfSchema(
             argv.conn, argv.table, argv.schema, { camelCase: argv.camelCase, writeHeader: !argv.noHeader })

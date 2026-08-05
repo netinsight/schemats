@@ -50,36 +50,20 @@ const argv = yargs
     .command('generate', 'generate type definition')
     .demand(1)
     .example('$0 generate -c postgres://username:password@localhost/db -t table1 -t table2 -s schema -o interface_output.ts', 'generate typescript interfaces from schema')
-    .demand('c')
-    .alias('c', 'conn')
-    .nargs('c', 1)
-    .describe('c', 'database connection string')
-    .alias('t', 'table')
-    .nargs('t', 1)
-    .describe('t', 'table name')
-    .alias('s', 'schema')
-    .nargs('s', 1)
-    .describe('s', 'schema name')
-    .alias('C', 'camelCase')
-    .describe('C', 'Camel-case columns')
-    .describe('noHeader', 'Do not write header')
-    .demand('o')
-    .nargs('o', 1)
-    .alias('o', 'output')
-    .describe('o', 'output file name')
+    .options({
+    conn: { alias: 'c', demandOption: true, nargs: 1, describe: 'database connection string', type: 'string' },
+    table: { alias: 't', nargs: 1, describe: 'table name', type: 'string', array: true },
+    schema: { alias: 's', nargs: 1, describe: 'schema name', type: 'string' },
+    camelCase: { alias: 'C', describe: 'Camel-case columns', type: 'boolean' },
+    noHeader: { describe: 'Do not write header', type: 'boolean' },
+    output: { alias: 'o', demandOption: true, nargs: 1, describe: 'output file name', type: 'string' }
+})
     .help('h')
     .alias('h', 'help')
-    .argv;
+    .parseSync();
 (async () => {
     try {
-        if (!Array.isArray(argv.table)) {
-            if (!argv.table) {
-                argv.table = [];
-            }
-            else {
-                argv.table = [argv.table];
-            }
-        }
+        argv.table ??= [];
         const formattedOutput = await (0, index_1.typescriptOfSchema)(argv.conn, argv.table, argv.schema, { camelCase: argv.camelCase, writeHeader: !argv.noHeader });
         fs.writeFileSync(argv.output, formattedOutput);
     }
