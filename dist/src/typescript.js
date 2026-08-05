@@ -4,9 +4,12 @@
  * Created by xiamx on 2016-08-10.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateTableTypes = exports.generateEnumType = exports.generateTableInterface = void 0;
+exports.generateTableInterface = generateTableInterface;
+exports.generateEnumType = generateEnumType;
+exports.generateTableTypes = generateTableTypes;
 function nameIsReservedKeyword(name) {
     const reservedKeywords = ['string', 'number', 'package', 'object'];
+    // eslint-disable-next-line @typescript-eslint/prefer-includes
     return reservedKeywords.indexOf(name) !== -1;
 }
 function normalizeName(name) {
@@ -31,7 +34,6 @@ function generateTableInterface(tableNameRaw, tableDefinition, options) {
         }
     `;
 }
-exports.generateTableInterface = generateTableInterface;
 function generateEnumType(enumObject, options) {
     let enumString = '';
     for (const enumNameRaw in enumObject) {
@@ -44,7 +46,6 @@ function generateEnumType(enumObject, options) {
     }
     return enumString;
 }
-exports.generateEnumType = generateEnumType;
 function generateTableTypes(tableNameRaw, tableDefinition, options) {
     const tableName = options.transformTypeName(tableNameRaw);
     let fields = '';
@@ -74,7 +75,6 @@ function generateTableTypes(tableNameRaw, tableDefinition, options) {
         validator
     };
 }
-exports.generateTableTypes = generateTableTypes;
 function validatorFromColumnDefinition(definition) {
     if (![
         'number',

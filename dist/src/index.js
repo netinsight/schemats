@@ -7,7 +7,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Options = exports.getDatabase = exports.typescriptOfSchema = exports.validatorToString = exports.typescriptOfTable = void 0;
+exports.Options = exports.getDatabase = void 0;
+exports.typescriptOfTable = typescriptOfTable;
+exports.validatorToString = validatorToString;
+exports.typescriptOfSchema = typescriptOfSchema;
 const typescript_1 = require("./typescript");
 const schema_1 = require("./schema");
 const options_1 = __importDefault(require("./options"));
@@ -64,7 +67,6 @@ async function typescriptOfTable(db, table, schema, options = new options_1.defa
     interfaces += (0, typescript_1.generateTableInterface)(table, tableTypes, options);
     return { interfaces, validator };
 }
-exports.typescriptOfTable = typescriptOfTable;
 function validatorToString(validator) {
     const lines = [`    ${validator.tableName}: {`];
     for (const field of validator.fieldValidators) {
@@ -73,11 +75,11 @@ function validatorToString(validator) {
     lines.push('},');
     return lines.join('\n');
 }
-exports.validatorToString = validatorToString;
 async function typescriptOfSchema(db, tables = [], schema = null, options = {}) {
     if (typeof db === 'string') {
         db = (0, schema_1.getDatabase)(db);
     }
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     if (!schema) {
         schema = db.getDefaultSchema();
     }
@@ -238,7 +240,6 @@ export const Validator = {`
     const processedResult = await (0, typescript_formatter_1.processString)('schema.ts', output, formatterOption);
     return processedResult.dest;
 }
-exports.typescriptOfSchema = typescriptOfSchema;
 var schema_2 = require("./schema");
 Object.defineProperty(exports, "getDatabase", { enumerable: true, get: function () { return schema_2.getDatabase; } });
 //# sourceMappingURL=index.js.map

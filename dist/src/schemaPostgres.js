@@ -83,6 +83,7 @@ class PostgresDatabase {
                     column.tsType = 'Array<Date>';
                     return column;
                 default:
+                    // eslint-disable-next-line @typescript-eslint/prefer-includes
                     if (customTypes.indexOf(column.udtName) !== -1) {
                         column.tsType = options.transformTypeName(column.udtName);
                         return column;
@@ -107,6 +108,7 @@ class PostgresDatabase {
             'join pg_catalog.pg_namespace n ON n.oid = t.typnamespace ' +
             `${enumSchemaWhereClause} ` +
             'order by t.typname asc, e.enumlabel asc;', [], (item) => {
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             if (!enums[item.name]) {
                 enums[item.name] = [];
             }

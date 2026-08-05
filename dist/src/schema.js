@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDatabase = void 0;
+exports.getDatabase = getDatabase;
 const schemaPostgres_1 = require("./schemaPostgres");
 var SQLVersion;
 (function (SQLVersion) {
@@ -23,5 +23,4 @@ function getDatabase(connection) {
             throw new Error(`SQL version unsupported in connection: ${connection}`);
     }
 }
-exports.getDatabase = getDatabase;
 //# sourceMappingURL=schema.js.map
