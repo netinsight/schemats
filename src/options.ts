@@ -1,4 +1,12 @@
-import { camelCase, upperFirst } from 'lodash'
+function camelCase (value: string): string {
+    return value
+        .replace(/[^a-zA-Z0-9]+(.)/g, (_, char: string) => char.toUpperCase())
+        .replace(/^[A-Z]/, char => char.toLowerCase())
+}
+
+function upperFirst (value: string): string {
+    return value.charAt(0).toUpperCase() + value.slice(1)
+}
 
 const DEFAULT_OPTIONS: OptionValues = {
     writeHeader: true,
