@@ -116,7 +116,7 @@ export async function typescriptOfSchema (
         optionsObject
     )
     const tableResultPromises = tables.map((table) =>
-        typescriptOfTable(db, table, schema!, optionsObject)
+        typescriptOfTable(db, table, schema, optionsObject)
     )
     const tableResults = await Promise.all(tableResultPromises)
     const interfaces = tableResults.map((r) => r.interfaces).join('')
