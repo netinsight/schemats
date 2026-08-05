@@ -17,7 +17,7 @@ interface SchematsConfig {
     noHeader: boolean,
 }
 
-const argv: SchematsConfig = yargs
+const argv = yargs
     .usage('Usage: $0 <command> [options]')
     .global('config')
     .default('config', 'schemats.json')
@@ -45,7 +45,7 @@ const argv: SchematsConfig = yargs
     .describe('o', 'output file name')
     .help('h')
     .alias('h', 'help')
-    .argv;
+    .argv as unknown as SchematsConfig;
 
 (async () => {
     try {
