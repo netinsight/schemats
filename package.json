@@ -50,6 +50,6 @@
   "dependencies": {
     "pg-promise": "12.7.0",
     "prettier": "^3.9.6",
-    "yargs": "^17.7.3"
+    "yargs": "^18.1.0"
   }
 }
