@@ -16,7 +16,7 @@
         "test": "npm run test:unit",
         "test:unit": "jest --testMatch '<rootDir>/test/unit/**/*.test.ts'",
         "test:integration": "POSTGRES_URL=postgres://user:password@127.0.0.1:5432/test jest --testMatch '<rootDir>/test/integration/**/*.test.ts'",
-        "prepublish": "npm run build",
+        "prepublishOnly": "npm run build",
         "coverage": "npm run test:unit -- --coverage"
     },
     "bin": {
