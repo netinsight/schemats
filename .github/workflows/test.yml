@@ -38,6 +38,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install --prefer-offline
     - run: npm run lint
-    - run: npm run build -- --noEmit
+    - run: npm run compile -- --noEmit
     - run: npm run test
     - run: npm run test:integration
